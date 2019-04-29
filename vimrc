@@ -304,13 +304,18 @@ let mapleader=" "          " one space as the map leader
 "nmap <C-tab>               :bn <CR>
 nmap <leader>e             :e $MYVIMRC <CR>
 nmap <silent> <leader>cmd  :!start cmd /k cd %:p:h<cr>  " open a CMD under the current directory
-nmap <silent> <leader>git  :!start "c:\Program Files\Git\git-bash.exe" <cr>  " open a git shell under the current directory
+" open a terminal under the current directory
+nmap <leader>term          :let $VIM_DIR=expand('%:p:h')<CR> :terminal<CR>cd $VIM_DIR<CR>
+nmap <leader>git           :!start "c:\Program Files\Git\git-bash.exe" <cr>  " open a git shell under the current directory
 nmap <leader>gitext        :!start "c:\Work\Tools\GitExtensions\GitExtensions.exe" <CR>  " open git extension gui
 nmap <leader>h             :nohlsearch<CR>  " clear highlights after search
 nmap <leader>cd            :cd %:p:h<CR>    " change to the directory of the currently open file for all windows
 nmap <leader>lcd           :lcd %:p:h<CR>   " change to the directory of the currently open file for the current window
 nmap <leader>bd            :bd <CR>         " close the current buffer, buffer is put into unlisted list
 nmap <leader>bw            :bw <CR>         " close the current buffer, buffer is swiped
+nmap <leader>co            :copen <CR>         " open quickfix window
+nmap <leader>cn            :cnext <CR>         " jump to next error
+nmap <leader>cp            :cprevious <CR>     " jump to previous error
 
 " move cursor in INSERT mode: alt + direction key
 "inoremap <M-j> <Down>
