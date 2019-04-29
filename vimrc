@@ -390,6 +390,7 @@ noremap <leader>ctags :call CreateCtags()<CR>  " Create ctags file in the backgr
 " ------Cscope ------- {{{
 set cscopetag   " use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t' and search cscope tag first
 set csto=0      " check cscope for definition of a symbol before checking ctags: set to 1, if you want the reverse search order.
+set cscopequickfix=s-,c-,d-,i-,t-,e-,a-,g-,f-   " enable quickfix for cscope, note that this will automatically jump to 1st match all the time
 
 function! CreateCscopeTags()
     silent !clear
