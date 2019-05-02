@@ -384,12 +384,13 @@ function! CreateCtags()
     silent !clear
 	let s:cwd = getcwd()
 	" pass the current working directory as the argument to the batch file
-    execute "!start cmd /k create_ctags.sh " . s:cwd 
+    execute "term create_ctags.sh " . s:cwd
 endfunction
 
 " Be sure to set the current working directory(:cd xxx) to the root of the source code project before the operation
 "autocmd BufWritePost !start cmd /k create_ctags.bat        " update ctags file in the background once the source code is modified
-noremap <leader>ctags :call CreateCtags()<CR>  " Create ctags file in the background mannually
+" Create ctags file in the background mannually
+noremap <leader>ctags :call CreateCtags()<CR>
 " }}} end of Ctags
 
 " ------Cscope ------- {{{
@@ -402,7 +403,6 @@ function! CreateCscopeTags()
 	let s:cwd = getcwd()
 	" pass the current working directory as the argument to the batch file
     execute "term create_cscopetags.sh " . s:cwd
-    "execute "!xterm bash create_cscopetags.sh " . s:cwd
 endfunction
 
 " Be sure to set the current working directory(:cd xxx) to the root of the source code project before the operation
