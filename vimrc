@@ -214,6 +214,17 @@ command! -nargs=+ -complete=command BufMessage call RedirMessages(<q-args>, ''  
 command! -nargs=+ -complete=command WinMessage call RedirMessages(<q-args>, 'new'    )
 command! -nargs=+ -complete=command TabMessage call RedirMessages(<q-args>, 'tabnew' )
 
+" Close quickfix window when selected an item and press enter to enter
+aug QFClose
+  au!
+  autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>
+aug END
+
+" Automatically open quickfix list window when execute quickfix command
+aug QFOpen
+	au!
+	au QuickFixCmdPost * if !empty(getqflist()) | copen | endif
+aug END
 
 " Allow backspacing over everything in insert mode.
 set backspace=indent,eol,start
@@ -314,6 +325,7 @@ nmap <leader>lcd           :lcd %:p:h<CR>   " change to the directory of the cur
 nmap <leader>bd            :bd <CR>         " close the current buffer, buffer is put into unlisted list
 nmap <leader>bw            :bw <CR>         " close the current buffer, buffer is swiped
 nmap <leader>co            :copen <CR>         " open quickfix window
+nmap <leader>cc            :cclose <CR>        " close quickfix window
 nmap <leader>cn            :cnext <CR>         " jump to next error
 nmap <leader>cp            :cprevious <CR>     " jump to previous error
 
