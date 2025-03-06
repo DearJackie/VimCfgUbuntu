@@ -30,6 +30,6 @@ uname -a : check linux version, including kernel etc.
 cat /etc/*release : get more detail for release information
 
 [packages]
-apt search keyword - search a package online without installA
-apt search .   - search all packagesA
+apt search keyword - search a package online without install
+apt search .   - search all packages
 
