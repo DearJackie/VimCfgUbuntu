@@ -329,12 +329,12 @@ nmap <silent><leader>path         :call AddSearchPath() <CR>
 "let g:NERDTreeWinPos = "right"
 "map <leader>o :NERDTreeFind <cr>   " View the current buffer in NERDTree
 "nmap <C-F10>    :NERDTreeToggle <cr> 
-
+"
 "" Check if NERDTree is open or active
 "function! s:IsNERDTreeOpen()        
 "  return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
 "endfunction
-
+"
 "" Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
 "" file, and we're not in vimdiff
 "function! s:SyncTree()
@@ -346,15 +346,15 @@ nmap <silent><leader>path         :call AddSearchPath() <CR>
 "endfunction
 "" Highlight currently open buffer in NERDTree
 "autocmd BufEnter * call s:SyncTree()
-
+"
 "" }}} end of NERDTree 
 
-"" ------Cscope ------- {{{
-"set cscopetag   " use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t' and search cscope tag first
-"set csto=0      " check cscope for definition of a symbol before checking ctags: set to 1, if you want the reverse search order.
-"set cscopequickfix=s-,c-,d-,i-,t-,e-,a-,g-,f-   " enable quickfix for cscope, note that this will automatically jump to 1st match all the time
-"
-"" }}} end of Cscope
+" ------Cscope ------- {{{
+set cscopetag   " use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t' and search cscope tag first
+set csto=0      " check cscope for definition of a symbol before checking ctags: set to 1, if you want the reverse search order.
+set cscopequickfix=s-,c-,d-,i-,t-,e-,a-,g-,f-   " enable quickfix for cscope, note that this will automatically jump to 1st match all the time
+
+" }}} end of Cscope
 
 " ------Tagbar ------- {{{
 "  this plugin displays the tags in a separate window
