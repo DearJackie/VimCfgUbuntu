@@ -1,0 +1,315 @@
+
+######################################## Misc vim tips #########################################
+ - jump: Generally, every time you do a command that can move the cursor further than
+ within the same line, this is called a jump.  This includes the search
+ commands "/" and "n" (it doesn't matter how far away the match is).  But not
+ the character searches with "fx" and "tx" or the word movements "w" and "e".
+ Also, "j" and "k" are not considered to be a jump, even when you use a
+ count to make them move the cursor quite a long way away.
+ list all jumps by command: jumps
+ - mark: ma-Z, maximum 26 marks, jump to mark by `markname
+ list all marks by command: marks
+ - change:
+ - tag: a tag is an identifier that appears in a "tags" file.  It is a sort of label that can be jumped to. 
+ show all tags: type command "tags".
+
+
+ freqently used commands
+ [keys]                    [count]   [toInsert]  [actions]
+ j,                         N         No         move cursor down
+ k,                         N         No         move cursor up
+ h,                         N         No         move cursor left 
+ l,                         N         No         move cursor right 
+ L,                         N         No         move cursor to line N from bottom(Last) of the window, default to the last line of the window
+ H,                         N         No         move cursor to line N from top(Home) of the window, default to the first line of the window
+ M,                         X         No         move cursor to the Middle of the screen 
+ G,                         N         No         go to the line specified by [count], if no [count], to the end line of the file
+ gg,                        N         No         go to the line specified by [count], if no [count], to the first non-blank charater of first line of the file
+ %,                         N         No         go to N% portion of the file
+ $,                         N         No         move cursor to the end of the Nth line, the same as "end" key 
+ ^,                         X         No         moves to the first non-blank character of the line
+ 0,                         X         No         moves to the very first character of the line, the same as "home" key
+ i,                         N         Yes        insert before cursor
+ I,                         N         Yes        Insert text before the first non-blank in the line
+ a,                         N         Yes        append after cursor
+ A                          N         Yes        Append text at the end of the line
+ w,                         N         No         words forward
+ b,                         N         No         words backward
+ e,                         N         No         forward to end of word
+ ge,                        N         No         backward to end of word
+ x,                         N         No         delete characters under and after cursor, the same as "del" key, [dl].
+ X,                         N         No         delete characters under before cursor, the same as "backspace" key. [dh].
+ d,                         N         No         [operator] delete text that d{motion} moves over
+ dd,                        N         No         delete N lines 
+ D,                         N         No         delete characters under cursor till end of line. [d$].
+ c,                         N         No         [operator] change text that c{motion} moves over.
+ C,                         N         No         delete characters under cursor till end of line and enter insert mode.[c$].
+ cc,                        N         No         delete N lines, and keep the ident, ie. the leading spaces are kept
+ s,                         X         No         change one character.[cl]
+ S,                         X         No         change a whole line.[cc]
+ J,                         N         No         Join [count] lines, with a minimum of two lines
+ u,                         N         No         undo changes
+ U,                         N         No         Undo all latest changes on one line, this command itself is also a change
+ r,                         N         No         Replace the character under the cursor with the new char, r<enter> add an Enter and insert a new line
+ R,                         N         No         Enter Replace mode: Each character you type replaces the char under cursor, the same as key "Insert" is enabled
+ f,                         N         No         find the Nth char forward in the line
+ F,                         N         No         find the Nth char backword in the line
+ t,                         N         No         to the Nth char forward in the line, cursor at the previous char position
+ T,                         N         No         to the Nth char backward in the line, cursor at the next char position
+ ;,                         N         No         Repeat latest f, t, F or T [count] times in the line
+ ,,                         N         No         Repeat latest f, t, F or T [count] times in opposite direction in the line
+ /,                         N         No         search by pattern followed by / forward
+ ?,                         N         No         search by pattern followed by ? backward
+ *,                         N         No         search word under cursor forward 
+ #,                         N         No         search word under cursor backward 
+ n,                         N         No         find the Nth matching pattern forward
+ N,                         N         No         find the Nth matching pattern backward
+ y,                         N         No         [operator] yank(copying) 
+ yy,                        N         No         copy a line
+ Y,                         N         No         copy a line
+ p,                         N         No         paste/put after the cursor N times
+ P,                         N         No         paste/put before the cursor N times
+ "*,                        X         No         access clipboard, appending yank and put commands after it to access system clipboard. This feature must be enabled by VIM. 
+ .,                         N         No         repeat the last change. it works for all changes, except for "u" (undo), CTRL-R(redo) and commands that start with a colon (:).
+ o,                         X         No         move cursor to Other side of selection in visual mode, Open new line under cursor in normal mode
+ O,                         X         No         move cursor to Other side of selection in the same line in visual block mode, Open new line above cursor in normal mode
+ gu,                        N         No         [operator] make lowercase
+ gU,                        N         No         [operator] make uppercase
+ v,                         X         No         visual mode 
+ V,                         X         No         visual line mode 
+ ctrl - V,                  X         No         visual block mode 
+ ctrl - R,                  N         No         redo changes which are undone
+ ctrl - O,                  N         No         jump to older position
+ ctrl - I,                  N         No         jump to newer position
+ ctrl - ],                  N         No         Jump to the definition of the keyword under the cursor, same as :tage {name}
+ ctrl - T,                  N         No         jump to [count] older entry in the tag stack
+ ctrl - F,                  N         No         page forward, the same as "PgDn" key
+ ctrl - B,                  N         No         page backword, the same as "PgUp" key
+ ctrl - E,                  N         No         scroll one line down 
+ ctrl - Y,                  N         No         scroll one line up 
+ ctrl - P,                  N         No         <UP> in COMMAND LINE mode: previous
+ ctrl - P,                  N         No         <UP> in NORMAL mode: previous, show previous matching list for auto completion
+ ctrl - P,                  N         Yes        show autocompletion suggestions from DOWN to TOP in INSERT mode, autocompletion feature available since V8.2.
+ ctrl - N,                  N         No         <DN> in COMMAND LINE mode: next
+ ctrl - N,                  N         No         <DN> in NORMAL mode: next, show next matching list for auto completion
+ ctrl - N,                  N         Yes        show autocompletion suggestions from TOP to DOWN in INSERT mode, autocompletion feature available since V8.2.
+ ctrl - W O,                N         No         keep only one window
+ CTRL-X CTRL-O.                                  auto completion of structures based on Tags.( Omni completion )
+ Ctrl + x     To invoke Omni completion and then:
+    <Ctrl + ]>: Tags file completion
+    <Ctrl + d>: Definition completion
+    <Ctrl + f>: Filename completion (based on files in $PWD)
+    <Ctrl + i>: Path pattern completion
+    <Ctrl + k>: Dictionary completion
+    <Ctrl + l>: Whole line completion
+    <Ctrl + n>: Keyword local completion
+    <Ctrl + o>: Omni completion completion
+    <Ctrl + v>: Command line completion
+ i, ctrl - A,               N         Yes        repeat last inserted text in INSERT mode, and stay in INSERT mode
+ i, ctrl - @,               N         Yes        repeat last inserted text in INSERT mode, and EXIT INSERT mode
+ CTRL-O {command}           -                    execute any Normal mode command from Insert mode.
+
+ ctrl - ],                  N         No         jump the definition of a tag, the same as: tag {tag_name}
+ g,ctrl - ],                N         No         jump the definition of a tag if multiple occurences, prompt for user selection, the same as: tjump {tag_name}
+
+:%yank
+:%y       select all
+:%delete
+:%d       delete all
+
+ xp  - switch the two characters between the cursor and after it
+ `"  - jump to the last cursor position in the file before you leave the file
+ `.  - jump to the last change position in the file
+ `0  - jump to the last position vim exits
+ :oldfiles - list all recent openned files
+ :e #<2    - open the recent file marked as index 2
+ ctrl - ^,                  N         No         switch back to altertive file, ie: last edit file
+ gf  - find and open the file under cursor, file will be found in "path" option
+
+ :ls!  - list all buffers including hidden buffer and unlisted buffer
+ :bwipe - remove the buffer from the list and not show by ls!
+
+ q: - enter into command line NORMAL mode, useful to edit commands and search hisotry commands
+ :q<CR> - exit command line NORMAL mode.
+ctrl + r, " - paste yanked text into command line when in command line mode or into search pattern by / or ?
+
+[changelist]:
+g; - jump to old change
+g, - jump to newer change
+:changes - show changelist
+
+[jumplist]:
+ctrl - O - jump to older jump 
+ctrl - I - jump to newer jump 
+:jumps - show jumplistA
+
+:s  - substitute text:  %s/from/to/gc - all lines with %, by default, only the current line,
+       \<: match start of line, \>: match end of line,
+       options: /g - global, /c - confirm each match, /e - ignore error when not matching
+ rCR - add a new line without enter INSERT mode
+ qa-zA-Z - start recording macros 
+ @a-zA-Z - playback recording
+
+ text objects, using operator-text_object, 
+ benifit: it doesn't matter where in the object the cursor, so it can delete words even if cursor not in beginning or end of word.
+ aw - a word, including white space after the word
+ as - a sentence, including the white space after the sentence
+ is - inner sentence, NOT including the white space after
+ a[ or a] - a [jjair
+ a( or a) - a ( pair
+ a< or a> - a < pair
+ a{ or a} - a { pair
+ ab - a block
+
+
+ To make an operator work on lines you double it.  The delete operator is
+ "d", thus to delete a line you use "dd".  Similarly, "gugu" makes a whole line
+ lowercase.  This can be shortened to "guu".  "gUgU" is shortened to "gUU" and
+ "g~g~" to "g~~". 
+
+ to check if any option status and value
+ set optionname?
+ eg: set filetype?   - check the current detected file type
+
+1.[Misc Tips]
+a)Useful environment vairables:
+$HOME
+$VIM
+$VIMRUNTIME
+$VIMRC
+$MYVIMRC
+&rtp
+&runtimepath - $VIMRUNTIMEPATH is part of this variable
+
+b) In windows system, to run external command without pending vim, using the following format:
+:!start cmd /k "my app.exe"
+
+c)Create tags for Linux kernel (using scripts\tags.sh):
+make O=. ARCH=arm SUBARCH=omap2 COMPILED_SOURCE=1 cscope tags
+make ARCH=x86 cscope tags
+
+d)Clear the highlights temparorily after search by "/": ":noh"
+
+f)Build tags for new plugins: helptags ALL
+
+2.[Paste]
+<Ctrl-r>"  - Paste from Vim's internal clipboard.
+<Ctrl-r>*  - paste from the system's clipboard.
+
+registers:
+<ctrl-r> "register_name - access the register in INSERT or COMMAND mode
+"register_name -  access the register in NORMAL mode
+  
+3.[Search]
+a) To search, in NORMAL mode, type "/" followed by search key word for forward search, "?" for backward search 
+b) To replace, in EX mode: [range]s/search/replace/[gc]: 
+range: optional, line numbers, if ommit, just search and replace current line 
+g: optional, without "g", only replace the first occurrence 
+c: optional, confirmation needed for replacement 
+:%s/search/replace/: search the whole file enter VISUAL mode and type the command, 
+to search in the selected range, note that DON'T delete the existing characters in EX line which indicating the ranges
+
+4.[Selection]
+Restore last opened file when open Vim: 
+a) when leaving VIM, ":mksession!", save(overwrite the file exists) Session.vim in the current directory. 
+Shortcut: "command! Q mksession! ~/Session.vim | qall" ( use :Q to save sessions ) 
+b) when opening VIM, "vim -S /path/to/Session.vim" to restore.
+
+5.[Comment]
+Comment mulitple lines: 
+a) Ctrl-V to enter VISUAL BLOCK mode and select several lines, Shift-i to INSERT mode, type the "//" and then ESC.
+b) :1,10s/^/#/ => comment line 1 to 10
+
+6.[plugins]
+check what plugin is loaded:
+a) :scriptnames - list all loaded scripts including plugins
+b) :set runtimepath? - display the paths where vim search for plugins
+
+7.[navigation]
+[ - previous/backward
+] - next/forward
+
+
+%			Find the next item in 'this line' after or under the
+			cursor and jump to its match. |inclusive| motion.
+			Items can be:
+			([{}])		parenthesis or (curly/square) brackets
+					(this can be changed with the
+					'matchpairs' option)
+			/* */		start or end of C-style comment
+			#if, #ifdef, #else, #elif, #endif
+					C preprocessor conditionals (when the
+					cursor is on the # or no ([{
+					is following)
+- sentence
+(			[count] |sentence|s backward.  |exclusive| motion.
+)			[count] |sentence|s forward.  |exclusive| motion.
+- paragraph
+{			[count] |paragraph|s backward.  |exclusive| motion.
+}			[count] |paragraph|s forward.  |exclusive| motion.
+- section 
+]]			[count] |section|s forward or to the next '{' in the
+			first column.  When used after an operator, then also
+			stops below a '}' in the first column.  |exclusive|
+			Note that |exclusive-linewise| often applies.
+][			[count] |section|s forward or to the next '}' in the
+			first column.  |exclusive|
+			Note that |exclusive-linewise| often applies.
+[[			[count] |section|s backward or to the previous '{' in
+			the first column.  |exclusive|
+			Note that |exclusive-linewise| often applies.
+[]			[count] |section|s backward or to the previous '}' in
+			the first column.  |exclusive|
+			Note that |exclusive-linewise| often applies.
+
+provided by builtin plugin 'matchit':
+[(			Go to [count] previous unmatched '('.  |exclusive| motion.
+[{			Go to [count] previous unmatched '{'.  |exclusive| motion.
+])			Go to [count] next unmatched ')'.  |exclusive| motion.
+]}			Go to [count] next unmatched '}'.  |exclusive| motion.
+]m			Go to [count] next start of a method (for Java or
+			similar structured language).  When not before the
+			start of a method, jump to the start or end of the
+			class.  |exclusive| motion.
+]M			Go to [count] next end of a method (for Java or
+			similar structured language).  When not before the end
+			of a method, jump to the start or end of the class.
+			|exclusive| motion.
+[m			Go to [count] previous start of a method (for Java or
+			similar structured language).  When not after the
+			start of a method, jump to the start or end of the
+			class.  When no '{' is found before the cursor this is
+			an error. |exclusive| motion.
+[M			Go to [count] previous end of a method (for Java or
+			similar structured language).  When not after the
+			end of a method, jump to the start or end of the
+			class.  When no '}' is found before the cursor this is
+			an error. |exclusive| motion.
+[#			Go to [count] previous unmatched "#if" or "#else". |exclusive| motion.
+]#			Go to [count] next unmatched "#else" or "#endif". |exclusive| motion.
+[*  or  [/		Go to [count] previous start of a C comment "/*". |exclusive| motion.
+]*  or  ]/		Go to [count] next end of a C comment "*/".  |exclusive| motion.
+
+
+- word
+A word consists of a sequence of 'letters, digits and underscores', or a
+sequence of other non-blank characters, separated with white space (spaces,
+tabs, <EOL>).  This can be changed with the 'iskeyword' option.  An empty line
+is also considered to be a word.
+
+- WORD
+A WORD consists of a sequence of non-blank characters, separated with white
+space.  An empty line is also considered to be a WORD.
+
+A sequence of folded lines is counted for one word of a single character.
+"w" and "W", "e" and "E" move to the start/end of the first word or WORD after
+a range of folded lines.  "b" and "B" move to the start of the first word or
+WORD before the fold.
+
+examples:
+192.1.168.43;hello is considered as a single WORD, but has multiple words. 
+-this-is-a-WORD- is a single WORD, _this_is_a_word_ is a word.
+_@3thankyou_ is a WORD, _232_thank_YOU is a word. 
+
+
+

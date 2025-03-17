@@ -1,0 +1,130 @@
+
+This is a Vim configurations including customized plugins for linux system.
+
+To use this configurations, run "setup.sh" and README.
+
+[DESCRIPTION]
+.vim                  
+|------setup.sh: Script to install required prerequisits and copy the configuration to $HOME.
+|------bin: directory for 3rd party executables like universal ctags. Both ectags and uctags can't find references of symbols. 
+|   THIS BIN DIRECTORY IS REPLACED BY setup.sh
+|----------|- ectags: exuberant-ctags. ctags-5.8-1.i386. 
+|----------|-         https://ctags.sourceforge.net
+|----------|-         sudo apt-get install exuberant-ctags  
+|----------|- uctags: universal ctags. uctags-2024.08.03-linux-x86_64. [default ctags], if you want to swith to ectags, change file "vimrc" "ctagspath" variable.
+|----------|-         https://github.com/universal-ctags/ctags
+|----------|-         sudo apt-get install universal-ctags  
+|----------|- gtags:  GNU Global tag system. and works the same way across diverse enviornment, editor indepentent. Support C, Java, Yacc, PHP4 and assembly. It allows 
+|----------|-         duplicated tags and generate definitions and references just like cscope. Plugin parser to support new languages.
+|----------|-         All tags are generated into 3 catetories: GPATH, GRTAGS, GTAGS inside a folder. (defined in .tagcache) 
+|----------|-         sudo apt-get install global
+|----------|- cscope: it's integrated in Vim in most cases, with --enable-cscope when compile Vim. it supports C, also C++, Java. 
+|----------|-  	      https://cscope.sourceforge.net
+|----------|-  	      key features is to search for:
+|----------|-  	       - all references to a symbol
+|----------|-  	       - global definitions
+|----------|-  	       - functions called by a function
+|----------|-  	       - functions calling a function
+|----------|-  	       - text string
+|----------|-  	       - regular expression pattern
+|----------|-  	       - a file
+|----------|-  	       - files including a file
+|----------|-  	       sudo apt install cscope 
+|------colors: directory for color schemes
+|----------|- tomorrow-night.vim
+|------pack: directory for plugins using default Vim pack manager. Plugins under "start" are loaded automatically,those inside the "opt" directory, must be loaded manually.
+|----------   Check vim features(command "version" in vim), if "packages" feature is enabled, then the default plugin 
+|----------   manager is installed. Type "help packages" in vim to check the help of default plugin manager - packages.
+|----------|- plugins 
+|-------------|- start
+|----------------|- gutentags: a vim plugin that manages your tag files. It supports ctags and gtags
+|----------------|			   In order to generate tag files, Gutentags will have to figure out what's in your project.
+|----------------|			      To do this, it will locate well-known project root markers like SCM folders (.git,.svn,.hg, etc.),
+|----------------|			   any custom tags you define (with gutentags_project_root), and even things you may have defined
+|----------------|			   already with other plugins, like CtrlP.
+|----------------|			      If the current file you're editing is found to be in such a project, Gutentags will make sure
+|----------------|			   the tag file for that project is up to date. Then, as you work in files in that project, it will
+|----------------|			   partially re-generate the tag file. Every time you save, it will silently, in the background, update the tags for that file.
+|----------------|			   Usually, ctags can only append tags to an existing tag file, so Gutentags removes the tags
+|----------------|			   for the current file first, to make sure the tag file is always consistent with the source code.
+|----------------|			   Also, Gutentags is clever enough to not stumble upon itself by triggering multiple ctags processes
+|----------------|			   if you save files too fast, or your project is really big.
+|----------------|			   git -C ~/.vim/pack/tags/start clone https://github.com/ludovicchabant/vim-gutentags.git
+|----------------|- gutentags_plus: a vim plugin that manages your cscope tag files. It depends on gtags and its cscope interface gtags-cscope.
+|----------------|			   Gutentags_plus works with gutentags and provides seemless databases switching for gtags.
+|----------------|			   Gutentags can connect gtags databases automatically too, but it is trying to connect all the databases after updating.
+|----------------|			   As a result, when you are querying symbol definitions or references, you will get results from not only current project
+|----------------|			   but also other unrelated projects.
+|----------------|			   And your quickfix list will be totally messed up if you are working on more than two projects simultaneously.
+|----------------|			   So, unrelated gtags databases must be disconnected to prevent query results from many projects at the same time.
+|----------------|			   That's the right way to use gtags. Install gutentags_plus with gutentags, you will never be worry about gtags database
+|----------------|			   updating and connecting/disconnecting, you can search definitions and references whenever you want, database updating and
+|----------------|			   switching are totally transparent to users, like using IDEs.
+|----------------|			   git -C ~/.vim/pack/plugins/start clone https://github.com/skywind3000/gutentags_plus.git
+|----------------|- tagbar: this plugin displays the tags in a separate window, sorted by scope, tags generated automatically in memory only.
+|----------------|			   git -C ~/.vim/pack/plugins/start clone https://github.com/preservim/tagbar.git
+|----------------|- signify: show a diff using Vim its sign column, indicating added, modified and removed lines in the file
+|----------------|             that is managed by a version control system (VCS), 
+|----------------|             supports git, mercurial, darcs, bazaar, subversion, cvs, rcs, fossil, perforce, accurev, tfs, yadm.
+|----------------|             git -C ~/.vim/pack/plugins/start clone https://github.com/mhinz/vim-signify.git
+|-------------|- opt
+|----------------|- nerdtree: a file system explorer, git -C ~/.vim/pack/files/opt clone https://github.com/preservim/nerdtree
+|----------------|- Netrw: a file system explorer default integrated by Vim 9.1
+|----------------|- 
+|------README: this file, an instruction on how to use this configuration and misc. descriptions.
+|------vimrc: vim configuration file. This is the 2nd user configuration file, don't put any ".vimrc" under $HOME(~) to make sure this takes effect.
+|------vimtips: misc. vim tips for efficiency.
+
+[MISC.]
+tags generators
+ - ctags: C only. 
+ - exuberant ctags: one of the most popular ones, support many languages(41), not maitained since 2009.
+ - universal ctags: similar to exuberant ctags, but newer and maintained, support more languages. https://ctags.io
+ - ptags.py: Python
+ - ptags: Perl
+ - GNU Global: gtags
+  Languages Supported by Exuberant Ctags and Universal ctags:
+-  -Ant.
+-  -Assembler.
+-  -ASP.
+-  -Awk.
+-  -BASIC.
+-  -BETA.
+-  -C. 
+-  -C++.
+-  -C#.
+-  -COBOL.
+-  -DOS Batch.
+-  -Eiffel.
+-  -Erlang.
+-  -Flex.
+-  -Fortran.
+-  -HTML.
+-  -Java.
+-  -JavaScript.
+-  -Lisp.
+-  -Lua.
+-  -Make.
+-  -MATLAB.
+-  -Objective Caml.
+-  -Pascal.
+-  -Perl.
+-  -PHP.
+-  -PL/SQL.
+-  -Python (Pyrex/Cython).
+-  -REXX.
+-  -Ruby.
+-  -Scheme.
+-  -Shell scripts (Bourne/Korn/Z).
+-  -S-Lang.
+-  -SML (Standard ML).
+-  -Tcl.
+-  -TeX.
+-  -Vera.
+-  -Verilog.
+-  -VHDL.
+-  -Vim.
+-  -YACC.
+
+
+

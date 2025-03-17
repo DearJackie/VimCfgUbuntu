@@ -1,0 +1,35 @@
+[ls -l -F]
+For -l:
+
+‘-’ regular file
+‘b’ block special file
+‘c’ character special file
+‘C’ high performance (“contiguous data”) file
+‘d’ directory
+‘D’ door (Solaris 2.5 and up)
+‘l’ symbolic link
+‘M’ off-line (“migrated”) file (Cray DMF)
+‘n’ network special file (HP-UX)
+‘p’ FIFO (named pipe)
+‘P’ port (Solaris 10 and up)
+‘s’ socket
+‘?’ some other file type
+
+For -F:
+
+nothing for regular files
+‘*’ regular files that are executable
+‘/’ directories
+‘@’ symbolic links
+‘|’ FIFOs
+‘=’ sockets
+‘>’ doors
+
+[system commands]
+uname -a : check linux version, including kernel etc.
+cat /etc/*release : get more detail for release information
+
+[packages]
+apt search keyword - search a package online without install
+apt search .   - search all packages
+

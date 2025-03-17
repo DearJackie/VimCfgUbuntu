@@ -1,14 +1,42 @@
-" Gvim configuration file
-" Maintainer:	Jackie CAI <caihuaqin@126.com>
-" Last change:	2019 Mar 18
 "
-" To use it, copy it to
-"     for Unix and OS/2:  ~/.vimrc
-"     for MS-DOS and Win32:  $VIM\_vimrc
+" customized vim configuration file for linux, tested in Ubuntu
+" Jackie CAI
+" Jul. 5 2024 - Initial version
 "
-" When started as "evim", evim.vim will already have done these settings.
+" NOTE:
+" According to the help menu (see :help $MYVIMRC), vim will look for a user
+" vimrc in specific places.
+" It look first for ~/.vimrc and then for ~/.vim/vimrc.
+" Vim stops searching after the first one found.
+" Vim will set automatically the $MYVIMRC environment variable to the location
+" of the vimrc used.
 
+"""""""""""""""""""""""default configuration""""""""""""""""""""""""""""""""""
+" load default configuration before doing any customization
+" source $VIMRUNTIME/defaults.vim
+"
+" Thi is a copy of the default vimrc file for v9.1 in Ubuntu, this is to
+" ensure consistence.
+"
+" The default vimrc file.
+"
+" Maintainer:	The Vim Project <https://github.com/vim/vim>
+" Last change:	2023 Aug 10
+" Former Maintainer:	Bram Moolenaar <Bram@vim.org>
+"
+" This is loaded if no vimrc file was found.
+" Except when Vim is run with "-u NONE" or "-C".
+" Individual settings can be reverted with ":set option&".
+" Other commands can be reverted as mentioned below.
+
+" When started as "evim", evim.vim will already have done these settings.
 if v:progname =~? "evim"
+  finish
+endif
+
+" Bail out if something that ran earlier, e.g. a system wide vimrc, does not
+" want Vim to use these default values.
+if exists('skip_defaults_vim')
   finish
 endif
 
@@ -19,12 +47,96 @@ if &compatible
   set nocompatible
 endif
 
-"set t_Co = 256
+" When the +eval feature is missing, the set command above will be skipped.
+" Use a trick to reset compatible only when the +eval feature is missing.
+silent! while 0
+  set nocompatible
+silent! endwhile
 
-" In many terminal emulators the mouse works just fine.  By enabling it you
-" can position the cursor, Visually select and scroll with the mouse.
-if has('mouse')
-  set mouse=""  " diable mouse
+" Allow backspacing over everything in insert mode.
+set backspace=indent,eol,start
+
+set history=200		" keep 200 lines of command line history
+set ruler		" show the cursor position all the time
+set showcmd		" display incomplete commands
+set wildmenu		" display completion matches in a status line
+
+set ttimeout		" time out for key codes
+set ttimeoutlen=100	" wait up to 100ms after Esc for special key
+
+" Show @@@ in the last line if it is truncated.
+set display=truncate
+
+" Show a few lines of context around the cursor.  Note that this makes the
+" text scroll if you mouse-click near the start or end of the window.
+set scrolloff=5
+
+" Do incremental searching when it's possible to timeout.
+if has('reltime')
+  set incsearch
+endif
+
+" Do not recognize octal numbers for Ctrl-A and Ctrl-X, most users find it
+" confusing.
+set nrformats-=octal
+
+" For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries.
+if has('win32')
+  set guioptions-=t
+endif
+
+" Don't use Q for Ex mode, use it for formatting.  Except for Select mode.
+" Revert with ":unmap Q".
+map Q gq
+sunmap Q
+
+" CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
+" so that you can undo CTRL-U after inserting a line break.
+" Revert with ":iunmap <C-U>".
+inoremap <C-U> <C-G>u<C-U>
+
+" Only do this part when Vim was compiled with the +eval feature.
+if 1
+
+  " Enable file type detection.
+  " Use the default filetype settings, so that mail gets 'tw' set to 72,
+  " 'cindent' is on in C files, etc.
+  " Also load indent files, to automatically do language-dependent indenting.
+  " Revert with ":filetype off".
+  filetype plugin indent on
+
+  " Put these in an autocmd group, so that you can revert them with:
+  " ":autocmd! vimStartup"
+  augroup vimStartup
+    autocmd!
+
+    " When editing a file, always jump to the last known cursor position.
+    " Don't do it when the position is invalid, when inside an event handler
+    " (happens when dropping a file on gvim), for a commit or rebase message
+    " (likely a different one than last time), and when using xxd(1) to filter
+    " and edit binary files (it transforms input files back and forth, causing
+    " them to have dual nature, so to speak)
+    autocmd BufReadPost *
+      \ let line = line("'\"")
+      \ | if line >= 1 && line <= line("$") && &filetype !~# 'commit'
+      \      && index(['xxd', 'gitrebase'], &filetype) == -1
+      \ |   execute "normal! g`\""
+      \ | endif
+
+  augroup END
+
+  " Quite a few people accidentally type "q:" instead of ":q" and get confused
+  " by the command line window.  Give a hint about how to get out.
+  " If you don't like this you can put this in your vimrc:
+  " ":autocmd! vimHints"
+  augroup vimHints
+    au!
+    autocmd CmdwinEnter *
+	  \ echohl Todo |
+	  \ echo gettext('You discovered the command-line window! You can close it with ":q".') |
+	  \ echohl None
+  augroup END
+
 endif
 
 " Switch syntax highlighting on when the terminal has colors or when using the
@@ -36,63 +148,6 @@ if &t_Co > 2 || has("gui_running")
   " I like highlighting strings inside C comments.
   " Revert with ":unlet c_comment_strings".
   let c_comment_strings=1
-endif
-
-
-" Only do this part when compiled with support for autocommands.
-if has("autocmd")
-
-  " Enable file type detection.
-  " Use the default filetype settings, so that mail gets 'tw' set to 72,
-  " 'cindent' is on in C files, etc.
-  " Also load indent files, to automatically do language-dependent indenting.
-  " Revert with ":filetype off".
-  filetype plugin indent on
-
-  " Put these in an autocmd group, so that you can revert them with:
-  " ":augroup vimStartup | au! | augroup END"
-  augroup vimStartup
-    au!
-
-    " When editing a file, always jump to the last known cursor position.
-    " Don't do it when the position is invalid, when inside an event handler
-    " (happens when dropping a file on gvim) and for a commit message (it's
-    " likely a different one than last time).
-    autocmd BufReadPost *
-      \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
-      \ |   exe "normal! g`\""
-      \ | endif
-
-  augroup END
-
-endif " has("autocmd")
-
-" Only do this part when compiled with support for autocommands.
-if has("autocmd")
-
-  " Put these in an autocmd group, so that we can delete them easily.
-  augroup vimrcEx
-  au!
-
-  " For all text files set 'textwidth' to 78 characters.
-  autocmd FileType text setlocal textwidth=78
-
-  augroup END
-
-else
-
-  set autoindent		" always set autoindenting on
-
-endif " has("autocmd")
-
-" Add optional packages.
-"
-" The matchit plugin makes the % command work better, but it is not backwards
-" compatible.
-" The ! means the package won't be loaded right away but when plugins are
-" loaded during initialization.
-if has('syntax') && has('eval')
-  packadd! matchit
 endif
 
 " Convenient command to see the difference between the current buffer and the
@@ -111,214 +166,138 @@ if has('langmap') && exists('+langremap')
   set nolangremap
 endif
 
-set diffexpr=MyDiff()
-function MyDiff()
-  let opt = '-a --binary '
-  if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
-  if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
-  let arg1 = v:fname_in
-  if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
-  let arg1 = substitute(arg1, '!', '\!', 'g')
-  let arg2 = v:fname_new
-  if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
-  let arg2 = substitute(arg2, '!', '\!', 'g')
-  let arg3 = v:fname_out
-  if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
-  let arg3 = substitute(arg3, '!', '\!', 'g')
-  if $VIMRUNTIME =~ ' '
-    if &sh =~ '\<cmd'
-      if empty(&shellxquote)
-        let l:shxq_sav = ''
-        set shellxquote&
-      endif
-      let cmd = '"' . $VIMRUNTIME . '\diff"'
-    else
-      let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
-    endif
-  else
-    let cmd = $VIMRUNTIME . '\diff'
-  endif
-  let cmd = substitute(cmd, '!', '\!', 'g')
-  silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3
-  if exists('l:shxq_sav')
-    let &shellxquote=l:shxq_sav
-  endif
-endfunction
+"""""""""""""""""""""""customization settings begins""""""""""""""""""""""""""""""""""
 
-" Function to redirect EX command outputs to a new window 
-function! RedirMessages(msgcmd, destcmd)
-"
-" Captures the output generated by executing a:msgcmd, then places this
-" output in the current buffer.
-"
-" If the a:destcmd parameter is not empty, a:destcmd is executed
-" before the output is put into the buffer. This can be used to open a
-" new window, new tab, etc., before :put'ing the output into the
-" destination buffer.
-"
-" Examples:
-"
-"   " Insert the output of :registers into the current buffer.
-"   call RedirMessages('registers', '')
-"
-"   " Output :registers into the buffer of a new window.
-"   call RedirMessages('registers', 'new')
-"
-"   " Output :registers into a new vertically-split window.
-"   call RedirMessages('registers', 'vnew')
-"
-"   " Output :registers to a new tab.
-"   call RedirMessages('registers', 'tabnew')
-"
-" Commands for common cases are defined immediately after the
-" function; see below.
-"
-    " Redirect messages to a variable.
-    "
-    redir => message
+" show status bar, indicating different information
+set ruler
 
-    " Execute the specified Ex command, capturing any messages
-    " that it generates into the message variable.
-    "
-    silent execute a:msgcmd
+" show cursor line for current line
+set cursorline
 
-    " Turn off redirection.
-    "
-    redir END
+" show line number in the left side of the editor
+set number
 
-    " If a destination-generating command was specified, execute it to
-    " open the destination. (This is usually something like :tabnew or
-    " :new, but can be any Ex command.)
-    "
-    " If no command is provided, output will be placed in the current
-    " buffer.
-    "
-    if strlen(a:destcmd) " destcmd is not an empty string
-        silent execute a:destcmd
-    endif
+" make sure L is to bottom and H to top
+set scrolloff=0
 
-    " Place the messages in the destination buffer.
-    "
-    silent put=message
+" show column limit
+set colorcolumn=80
 
-endfunction
+" to avoid automatical wrapping when editing text
+set textwidth=120
 
-" Create commands to make RedirMessages() easier to use interactively.
-" Here are some examples of their use:
-"
-"   :BufMessage registers
-"   :WinMessage ls
-"   :TabMessage echo "Key mappings for Control+A:" | map <C-A>
-"
-command! -nargs=+ -complete=command BufMessage call RedirMessages(<q-args>, ''       )
-command! -nargs=+ -complete=command WinMessage call RedirMessages(<q-args>, 'new'    )
-command! -nargs=+ -complete=command TabMessage call RedirMessages(<q-args>, 'tabnew' )
+" new window locates right
+set splitright
 
-" Close quickfix window when selected an item and press enter to enter
-aug QFClose
-  au!
-  autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>
-aug END
+" new window locates below 
+set splitbelow
 
-" Automatically open quickfix list window when execute quickfix command
-aug QFOpen
-	au!
-	au QuickFixCmdPost * if !empty(getqflist()) | copen | endif
-aug END
+" set style of status line
+" %F(Full file path)
+" %m(Shows + if modified - if not modifiable)
+" %r(Shows RO if readonly)
+" %<(Truncate here if necessary)
+" \ (Space Separator)
+" %=(Right align)
+" %l(Line number)
+" %v(Column number)
+" %L(Total number of lines)
+" %p(How far in file we are percentage wise)
+" %%(Percent sign)
+set statusline=%F\ %h%w%m%r\ %=%{getcwd()}\ %=%(Ln:%l/%L,Col:%c%V\ %=\ %P%)
 
-" Allow backspacing over everything in insert mode.
-set backspace=indent,eol,start
+" always show status line
+set laststatus=2
 
-set history=200		" keep 200 lines of command line history
-set ruler	    	" show the cursor position all the time
-set showcmd	     	" display incomplete commands
-set wildmenu		" display completion matches in a status line
+" never wrap long lines when displaying long lines
+set nowrap
 
-set ttimeout		" time out for key codes
-set ttimeoutlen=100	" wait up to 100ms after Esc for special key
+" set tab width
+set tabstop=4
 
-" Show @@@ in the last line if it is truncated.
-set display=truncate
+" show tab in text, show trailing space
+set listchars=tab:>-,trail:.
+"set list
 
-" Show a few lines of context around the cursor.  Note that this makes the
-" text scroll if you mouse-click near the start or end of the window.
-set scrolloff=5
+" set shift width to to align with tab stops
+set shiftwidth=4
 
-" Do not recognize octal numbers for Ctrl-A and Ctrl-X, most users find it
-" confusing.
-set nrformats-=octal
+" enable file type plugin, indent and auto completion
+filetype plugin indent on
 
-set number      " show line number
-set noautochdir " do not change directory when open files, buffers
-set nobackup
-set noswapfile
-set nowrap      " do not wrap long lines
-set hlsearch    " hilight search
-set ignorecase  " search case insensitive
-set smartcase   " When 'ignorecase' and 'smartcase' are both on, if a pattern contains an uppercase letter, it is case sensitive, otherwise, it is not. For example, /The would find only "The", while /the would find "the" or "The" etc.
-" Do incremental searching when it's possible to timeout.
-if has('reltime')
-  set incsearch
-endif
-set nowrapscan  " do not wrap around for search
-set showmatch   " show matching bracket
+" the matching parenthesis for special languages.
+" Only character pairs are allowed that are different,
+" thus you cannot jump between two double quotes.
+set mps+=<:>
+" au FileType c,cpp,java set mps+==:;
+
+" ignore case sensitive search by default for / and ?
+set ignorecase
+
+" highlight matching results
+set hlsearch
+
+" never wrap scanning the searching pattern
+set nowrapscan
+
+" enable increament search
+set incsearch
+
+" smart ident 
 set autoindent
 set smartindent
-set tabstop=4
-set clipboard+=unnamed  " share the default registers with system clipboard
-set noundofile          " no persistent undo file: .un~
-set laststatus=2        " last window always has a status line
-set statusline=%F\ %h%w%m%r\ %=%{getcwd()}\ %=%(%l,%c%V\ %=\ %P%)
-set foldmethod=syntax   " enable foldering by Syntax
-set foldnestmax=20      "
-set nofoldenable        " no fold when open a file
-set foldlevel=10        " 
-set cursorline
-set splitbelow          " new window locates below
-set splitright          " new window locates right 
 
-" foldmethod for vim file is marker
-autocmd FileType vim setlocal foldmethod=marker
+" show matching brackets when typing
+set showmatch
 
-" open all folds when open a file
-"autocmd BufRead * normal zR
+" matching time is in n*1/10 seconds
+set matchtime=5
 
-colorscheme tomorrow-night
+" do not change directory when open files, buffers
+set noautochdir
 
-if has("gui_running")
-"    colorscheme tomorrow-night
-    set mousehide		" Hide the mouse when typing text, only works in GUI
-    set guioptions-=T   " Hide Toolbar
-    set guioptions-=m   " Hide Menubar
-    set guioptions-=L
-    set guioptions-=r
-    set guioptions-=b
-    set guioptions-=e   " default tab style instead of gui style
-    if has("gui_win32")
-        set guifont=Consolas:h12:cANSI
-    else
-  
-    endif
+" never generate backup file
+set nobackup
+
+set noswapfile 
+
+" mamke sure the session file can be used by both windows and unix like system
+" never generate swap file
+set noswapfile 
+
+" mamke sure the session file can be used by both windows and unix like system
+set sessionoptions+=unix,slash
+
+" set the register '+' as the default(unamed), thus each time
+" when yank(y) or paste(p), Vim will use system clipboard '+'
+if has('clipboard')
+  set clipboard=unnamedplus
 endif
 
-" set third party programs path into PATH before Windows dir, in case GNU
-" win32 has the same program as Windows, it will take in advance
-let thirdpartypath=$HOME.'/.vim/'.'thirdparty'
-let $PATH=thirdpartypath.':'.$PATH
-let ctagspath=thirdpartypath.'/'.'ctags'
-let $PATH=ctagspath.':'.$PATH
-let cscopepath=thirdpartypath.'/'.'cscope'
-let $PATH=cscopepath.':'.$PATH
+" enable copy-on-select
+"if has('gvim')
+"  set setguioptions+=a 
+"endif
+""""""""""""""""""end of customization setting"""""""""""""""""""""""""""""""""""""""
+
+
+""""""""""""""""""start of plugin"""""""""""""""""""""""""""""""""""""""
+" be sure to install ctags and gtags
+"
+" customized color scheme by plugins
+"colorscheme tomorrow-night
 
 " key mappings
 let mapleader=" "          " one space as the map leader
-"nmap <C-tab>               :bn <CR>
+nmap <leader>nb            :bn <CR> " Ctrl-Tab not working in terminal, but can work in Gvim.
 nmap <leader>e             :e $MYVIMRC <CR>
-nmap <silent> <leader>cmd  :!start cmd /k cd %:p:h<cr>  " open a CMD under the current directory
-" open a terminal under the current directory
-nmap <leader>term          :let $VIM_DIR=expand('%:p:h')<CR> :terminal<CR>cd $VIM_DIR<CR>
-nmap <leader>git           :!start "c:\Program Files\Git\git-bash.exe" <cr>  " open a git shell under the current directory
-nmap <leader>gitext        :!start "c:\Work\Tools\GitExtensions\GitExtensions.exe" <CR>  " open git extension gui
+let $vimtips_file=fnamemodify($MYVIMRC, ":s?vimrc?vimtips.txt?:p")  
+nmap <leader>vt            :e $vimtips_file<CR> " short key to vim tips file
+let $linuxtips_file=fnamemodify($MYVIMRC, ":s?vimrc?linuxtips.txt?:p")  
+nmap <leader>lt            :e $linuxtips_file <CR> " short key to linux tips file
+
+" open a merminal under the current directory, using "term" command directly
+" nmap <leader>term          :let $VIM_DIR=expand('%:p:h')<CR> :terminal<CR>cd $VIM_DIR<CR> 
 nmap <leader>h             :nohlsearch<CR>  " clear highlights after search
 nmap <leader>cd            :cd %:p:h<CR>    " change to the directory of the currently open file for all windows
 nmap <leader>lcd           :lcd %:p:h<CR>   " change to the directory of the currently open file for the current window
@@ -329,20 +308,10 @@ nmap <leader>cc            :cclose <CR>        " close quickfix window
 nmap <leader>cn            :cnext <CR>         " jump to next error
 nmap <leader>cp            :cprevious <CR>     " jump to previous error
 
-" move cursor in INSERT mode: alt + direction key
-"inoremap <M-j> <Down>
-"inoremap <M-k> <Up>
-"inoremap <M-h> <left>
-"inoremap <M-l> <Right>
-
-" Don't use Ex mode, use Q for formatting.
-" Revert with ":unmap Q".
-"map Q gq
-
 " CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break.
 " Revert with ":iunmap <C-U>".
-inoremap <C-U> <C-G>u<C-U>
+" inoremap <C-U> <C-G>u<C-U>
 
 function! AddSearchPath()
     silent !clear
@@ -355,21 +324,13 @@ endfunction
 " add the current working directory as search path for 'gf' etc.
 nmap <silent><leader>path         :call AddSearchPath() <CR>
 
-" Plugins {{{
-" ------Netrw ------- {{{
-" Netrw
-"let g:netrw_liststyle=3  " View type is Tree
-"autocmd FileType netrw setl bufhidden=delete "wipe
-"nmap <F10> :Lexplore <cr> 
-" }}} end of Netrw
-
-" ------NERDTree ------- {{{
-let g:NERDTreeQuitOnOpen = 1 "automatically close NerdTree when you open a file
-let g:NERDTreeWinPos = "right"
-map <leader>o :NERDTreeFind <cr>   " View the current buffer in NERDTree
-nmap <F10>    :NERDTreeToggle <cr> 
-
-" Check if NERDTree is open or active
+"" ------NERDTree ------- {{{
+"let g:NERDTreeQuitOnOpen = 1 "automatically close NerdTree when you open a file
+"let g:NERDTreeWinPos = "right"
+"map <leader>o :NERDTreeFind <cr>   " View the current buffer in NERDTree
+"nmap <C-F10>    :NERDTreeToggle <cr> 
+"
+"" Check if NERDTree is open or active
 "function! s:IsNERDTreeOpen()        
 "  return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
 "endfunction
@@ -383,69 +344,73 @@ nmap <F10>    :NERDTreeToggle <cr>
 "  wincmd l   " assume the NERDTree is on the left side by default
 "  endif
 "endfunction
-
-" Highlight currently open buffer in NERDTree
+"" Highlight currently open buffer in NERDTree
 "autocmd BufEnter * call s:SyncTree()
-
-" }}} end of NERDTree 
-
-" ------Ctags ------- {{{
-set tags=./tags;,tags;         " look for "tags" file in the current directory and working directory then upward until "/"(root directory); 
-
-function! CreateCtags()
-    silent !clear
-	let s:cwd = getcwd()
-	" pass the current working directory as the argument to the batch file
-    execute "term create_ctags.sh " . s:cwd
-endfunction
-
-" Be sure to set the current working directory(:cd xxx) to the root of the source code project before the operation
-"autocmd BufWritePost !start cmd /k create_ctags.bat        " update ctags file in the background once the source code is modified
-" Create ctags file in the background mannually
-noremap <leader>ctags :call CreateCtags()<CR>
-" }}} end of Ctags
+"
+"" }}} end of NERDTree 
 
 " ------Cscope ------- {{{
 set cscopetag   " use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t' and search cscope tag first
 set csto=0      " check cscope for definition of a symbol before checking ctags: set to 1, if you want the reverse search order.
 set cscopequickfix=s-,c-,d-,i-,t-,e-,a-,g-,f-   " enable quickfix for cscope, note that this will automatically jump to 1st match all the time
 
-function! CreateCscopeTags()
-    silent !clear
-	let s:cwd = getcwd()
-	" pass the current working directory as the argument to the batch file
-    execute "term create_cscopetags.sh " . s:cwd
-endfunction
-
-" Be sure to set the current working directory(:cd xxx) to the root of the source code project before the operation
-"autocmd BufWritePost !start cmd /k create_cscopetags.bat     " update cscope tags file in the background once the source code is modified
-" update cscope tags file mannually
-nmap <leader>css :call CreateCscopeTags()<CR>
-nmap <leader>csa :cs add cscope.out <CR>                      " Add the cscope database
-nmap <leader>cfa :cs find a <C-R>=expand("<cword>")<CR><CR>	  " Find assignments to symbol under cursor *
-nmap <leader>cfc :cs find c <C-R>=expand("<cword>")<CR><CR>	  " Find functions calling function under cursor *
-nmap <leader>cfd :cs find d <C-R>=expand("<cword>")<CR><CR>   " Find functions called by function under cursor *
-nmap <leader>cfe :cs find e <C-R>=expand("<cword>")<CR><CR>	  " Find egrep pattern under cursor
-nmap <leader>cff :cs find f <C-R>=expand("<cfile>")<CR><CR>	  " Find this file *
-nmap <leader>cfg :cs find g <C-R>=expand("<cword>")<CR><CR>	  " Find defintion under cursor *
-nmap <leader>cfi :cs find i <C-R>=expand("<cfile>")<CR><CR> " Find files #include this file *
-nmap <leader>cfs :cs find s <C-R>=expand("<cword>")<CR><CR>	  " Find symbol under cursor *
-nmap <leader>cft :cs find t <C-R>=expand("<cword>")<CR><CR>	  " Find text string under cursor
 " }}} end of Cscope
 
 " ------Tagbar ------- {{{
+"  this plugin displays the tags in a separate window
 let g:tagbar_left=1            " tagbar windown locates on the left
 let g:tagbar_autofocus=1       " cursor will move to tagbar window when it's opened
 let g:tagbar_autoclose=1       " close tagbar automatically when selected one tag
 nmap <F8> :TagbarToggle <cr> 
 " }}}  end of Tagbar
 "
-" ------gitgutter ------- {{{
-" The delay is governed by vim's updatetime option; the default value is 4000, i.e. 4 seconds, but I suggest reducing it to around 100ms
-set updatetime=100
-" define key mapping to show all changes in the buffer
-nmap <C-F10> :GitGutterFold <cr>
-" }}}
+" ------Gutentags and Gutentags_plus ------- {{{
+" enable logs
+"let g:gutentags_trace = 1
+
+" enable both ctags and gtags module
+let g:gutentags_modules = ['ctags', 'gtags_cscope']
+
+"let g:gutentags_define_advanced_command = 1
+
+" config project root markers, besides VCS markers such as .git, .svn etc.
+let g:gutentags_project_root = ['.root']
+
+" generate databases in my cache directory, prevent gtags files polluting my project
+let g:gutentags_cache_dir = expand('~/.tagscache')
+
+" change focus to quickfix window after search (optional).
+let g:gutentags_plus_switch = 1
+
+" shortkey to create a root marker for gutentags tags generating, make sure to go to the required directory before running this command
+nmap <leader>rtags   :!mkdir -p .root<CR><CR>
+
+" manual update tags update (Gutentags), both ctags and gtags(in a separate folder
+" this command only available when a recognicable file is open
+nmap <leader>tup   :GutentagsUpdate<CR>
+
+" Gutentags_plus; GscopeFind {querytype} {name}
+" disable the default keymaps by if wan:
+" let g:gutentags_plus_nomap = 1
+" default keymap 	                                                    desc
+"noremap <leader>cs :GscopeFind s <C-R><C-W><cr>                       " Find symbol (reference) under cursor
+"noremap <leader>cg :GscopeFind g <C-R><C-W><cr>                       " Find symbol definition under cursor
+"noremap <leader>cd :GscopeFind c <C-R><C-W><cr>                       " Functions called by this function
+"noremap <leader>cc :GscopeFind t <C-R><C-W><cr>                       " Functions calling this function
+"noremap <leader>ct :GscopeFind e <C-R><C-W><cr>                       " Find text string under cursor
+"noremap <leader>ce :GscopeFind f <C-R>=expand("<cfile>")<cr><cr>      " Find egrep pattern under cursor
+"noremap <leader>cf :GscopeFind i <C-R>=expand("<cfile>")<cr><cr>      " Find file name under cursor
+"noremap <leader>ci :GscopeFind d <C-R><C-W><cr>                       " Find files #including the file name under cursor
+"noremap <leader>ca :GscopeFind a <C-R><C-W><cr>                       " Find places where current symbol is assigned
+"noremap <leader>cz :GscopeFind z <C-R><C-W><cr>                       " Find current word in ctags database
+
+" define a short command to find any symbol in Command mode instead of GscopeFind to find symbol definition
+noremap <leader>fs :GscopeFind g 
+noremap <F7> :GscopeFind g 
+
+" }}}  end of Gutentags
 "
-" }}}  end of Plugins
+"
+"""""""""""""""""""end of plugin""""""""""""""""""""""""""""""""""""""
+
 
