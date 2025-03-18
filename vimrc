@@ -286,7 +286,8 @@ endif
 "
 " customized color scheme by plugins
 "colorscheme tomorrow-night
-
+colorscheme elflord  
+"
 " key mappings
 let mapleader=" "          " one space as the map leader
 nmap <leader>nb            :bn <CR> " Ctrl-Tab not working in terminal, but can work in Gvim.
@@ -322,13 +323,13 @@ function! AddSearchPath()
    let &path='.,' . allpath 
 endfunction
 " add the current working directory as search path for 'gf' etc.
-nmap <silent><leader>path         :call AddSearchPath() <CR>
+nmap <leader>path         :call AddSearchPath() <CR>
 
-"" ------NERDTree ------- {{{
-"let g:NERDTreeQuitOnOpen = 1 "automatically close NerdTree when you open a file
-"let g:NERDTreeWinPos = "right"
-"map <leader>o :NERDTreeFind <cr>   " View the current buffer in NERDTree
-"nmap <C-F10>    :NERDTreeToggle <cr> 
+" ------NERDTree ------- {{{
+let g:NERDTreeQuitOnOpen = 1 "automatically close NerdTree when you open a file
+let g:NERDTreeWinPos = "right"
+map <leader>o :NERDTreeFind <cr>   " View the current buffer in NERDTree
+nmap <C-F10>    :NERDTreeToggle <cr> 
 "
 "" Check if NERDTree is open or active
 "function! s:IsNERDTreeOpen()        
@@ -347,7 +348,7 @@ nmap <silent><leader>path         :call AddSearchPath() <CR>
 "" Highlight currently open buffer in NERDTree
 "autocmd BufEnter * call s:SyncTree()
 "
-"" }}} end of NERDTree 
+" }}} end of NERDTree 
 
 " ------Cscope ------- {{{
 set cscopetag   " use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t' and search cscope tag first

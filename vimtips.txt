@@ -208,6 +208,7 @@ g: optional, without "g", only replace the first occurrence
 c: optional, confirmation needed for replacement 
 :%s/search/replace/: search the whole file enter VISUAL mode and type the command, 
 to search in the selected range, note that DON'T delete the existing characters in EX line which indicating the ranges
+find: find file in vim path and edit it. show "path": set path?
 
 4.[Selection]
 Restore last opened file when open Vim: 
@@ -311,5 +312,11 @@ examples:
 -this-is-a-WORD- is a single WORD, _this_is_a_word_ is a word.
 _@3thankyou_ is a WORD, _232_thank_YOU is a word. 
 
+[Theme]
+change vim theme: color theme_name
+to list all exising themes: ls /usr/share/vim/vim82/colors | grep .vim
+to view the current scheme: color
 
+[File format]
+change file format to linux or windows: set fileformat=unix|dos|mac
 
