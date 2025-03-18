@@ -1,4 +1,0 @@
-1.Script for generating the cscope files, by default, it generates tags for all
-the files for the given directory, you need to modify it for more accurate
-tags generation
-2.Make sure to grant create_cscopetags.sh the "execution" right by "chmod +x"
