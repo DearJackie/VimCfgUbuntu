@@ -12,6 +12,8 @@ sudo apt-get install universal-ctags
 echo ".....installing GNU global and gtags...."
 sudo apt-get install global
 
+# install ripgrep
+sudo apt-get install ripgrep
 
 # copy the configuration to required location under $HOME with directory name .vim
 # create a new directory if not exist

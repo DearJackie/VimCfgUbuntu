@@ -278,6 +278,14 @@ endif
 "if has('gvim')
 "  set setguioptions+=a 
 "endif
+
+" enable 'find' recursively in current working directory (pwd)
+set path+=**
+
+" enable ripgrep by default, replacing "vim/vimgrep" by "ripgrep", which is much faster
+set grepprg=rg\ --vimgrep\ --smart-case\ --hidden
+set grepformat=%f:%l:%c:%m
+
 """"""""""""""""""end of customization setting"""""""""""""""""""""""""""""""""""""""
 
 

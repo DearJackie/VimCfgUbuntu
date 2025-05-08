@@ -208,7 +208,15 @@ g: optional, without "g", only replace the first occurrence
 c: optional, confirmation needed for replacement 
 :%s/search/replace/: search the whole file enter VISUAL mode and type the command, 
 to search in the selected range, note that DON'T delete the existing characters in EX line which indicating the ranges
-find: find file in vim path and edit it. show "path": set path?
+c) find: find file in vim path and edit it. show "path": set path?
+d) vimgrep | grep: search in system, but slower
+e) search using "ripgrep": (by setting "grepprg" in .vimrc, you can do following: (other tools like ag, ack may slower)
+Search for "foo" in current working directory: :grep foo.
+Search for "foo" in files under src/: :grep foo src.
+Search for "foo" in current file directory: :grep foo %:h1.
+Search for "foo" in current file directory’s parent directory: :grep foo %:h:h (and so on).
+Search in files modified between git revisions: grep foo `git diff --name-only master..`
+Search current folder recursively within pattern *.c: grep foo **/*.c
 
 4.[Selection]
 Restore last opened file when open Vim: 
