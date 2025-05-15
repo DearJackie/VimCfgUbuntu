@@ -217,6 +217,44 @@ Search for "foo" in current file directory: :grep foo %:h1.
 Search for "foo" in current file directory’s parent directory: :grep foo %:h:h (and so on).
 Search in files modified between git revisions: grep foo `git diff --name-only master..`
 Search current folder recursively within pattern *.c: grep foo **/*.c
+Search a file name in linux terminal(not content of files): 
+rg --files [directory] | rg <pattern>;
+rg --files | rg myfile.txt
+rg --files | rg log.txt | xargs rm  # delete found files with the specified pattern
+
+[Tips for fzf - the fuzzy finder]: https://github.com/junegunn/fzf
+run in terminal: fzf [-m]
+vim basic integration: https://github.com/junegunn/fzf/blob/master/README-VIM.md#fzfrun
+:FZF[!] [-m] 
+:FZF [fzf_options string] [path string]
+CTRL-K / CTRL-J (or CTRL-P / CTRL-N) to move cursor up and down
+On multi-select mode (-m), TAB and Shift-TAB to mark multiple items
+
+Token	Match type	Description
+sbtrkt	fuzzy-match	Items that match sbtrkt
+'wild	exact-match (quoted)	Items that include wild
+'wild'	exact-boundary-match (quoted both ends)	Items that include wild at word boundaries
+^music	prefix-exact-match	Items that start with music
+.mp3$	suffix-exact-match	Items that end with .mp3
+!fire	inverse-exact-match	Items that do not include fire
+!^music	inverse-prefix-exact-match	Items that do not start with music
+!.mp3$	inverse-suffix-exact-match	Items that do not end with .mp3
+
+[Tips for fzf.vim - fzf vim advanced integration]: https://github.com/junegunn/fzf.vim
+:Files [PATH] - Files (runs $FZF_DEFAULT_COMMAND if defined)
+:GFiles [OPTS] - Git files (git ls-files)
+:GFiles? - Git files (git status)
+:Rg [PATTERN] - 'rg' search result (ALT-A to select all, ALT-D to deselect all)
+:Lines [QUERY] - Lines in loaded buffers
+:Tags [PREFIX] - Tags in the project (ctags -R)
+:Buffers -	Open buffers
+:Jumps - all vim jumps
+:Changes - Changelist across all open buffers
+:Marks - all vim marks
+:Commands - show fzf commands
+:History - :oldfiles and open buffers
+:History: - command history
+:History/ - search history
 
 4.[Selection]
 Restore last opened file when open Vim: 
@@ -326,5 +364,7 @@ to list all exising themes: ls /usr/share/vim/vim82/colors | grep .vim
 to view the current scheme: color
 
 [File format]
-change file format to linux or windows: set fileformat=unix|dos|mac
+1) change file format to linux or windows: set fileformat=unix|dos|mac
+2) to replace windows new line (displayed as ^M), use "\r" to search: %s/\r//
+
 

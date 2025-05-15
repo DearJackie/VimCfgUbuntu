@@ -286,6 +286,12 @@ set path+=**
 set grepprg=rg\ --vimgrep\ --smart-case\ --hidden
 set grepformat=%f:%l:%c:%m
 
+" Enable fzf default vim scripts which located in fzf package, default location by installing from github
+" is .fzf
+if isdirectory("~/.fzf")
+	set rtp+=~/.fzf
+endif
+
 """"""""""""""""""end of customization setting"""""""""""""""""""""""""""""""""""""""
 
 
