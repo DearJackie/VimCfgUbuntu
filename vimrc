@@ -288,9 +288,7 @@ set grepformat=%f:%l:%c:%m
 
 " Enable fzf default vim scripts which located in fzf package, default location by installing from github
 " is .fzf
-if isdirectory("~/.fzf")
-	set rtp+=~/.fzf
-endif
+set rtp+=~/.fzf
 
 """"""""""""""""""end of customization setting"""""""""""""""""""""""""""""""""""""""
 

@@ -222,6 +222,18 @@ rg --files [directory] | rg <pattern>;
 rg --files | rg myfile.txt
 rg --files | rg log.txt | xargs rm  # delete found files with the specified pattern
 
+riggrep cheatsheet: https://www.philipdaniels.com/blog/2019/ripgrep-cheatsheet/
+rg -C NUM NEEDLE : Show NUM lines before and after the match
+rg -c NEEDLE : List matching files, including a count
+rg -i NEEDLE : Search case-insensitively
+rg -g '*.nuspec' NEEDLE : Only search in *.nuspec files (can use multiple -g)
+rg -g '!*.nuspec' NEEDLE : Search in everything but *.nuspec files
+rg -p NEEDLE | less -R	Force pretty printed output even in pipes
+rg -e NEEDLE1 -e NEEDLE2	Search for multiple patterns
+rg -tcs -tconfig	Search in file types cs and config
+rg -Tconfig	Don’t search in file type config
+rg --files | rg NEEDLE	Match against filenames rather than content
+
 [Tips for fzf - the fuzzy finder]: https://github.com/junegunn/fzf
 run in terminal: fzf [-m]
 vim basic integration: https://github.com/junegunn/fzf/blob/master/README-VIM.md#fzfrun
