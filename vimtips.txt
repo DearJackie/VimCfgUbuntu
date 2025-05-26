@@ -13,6 +13,15 @@
  - tag: a tag is an identifier that appears in a "tags" file.  It is a sort of label that can be jumped to. 
  show all tags: type command "tags".
 
+to list all key mappings:
+:map - display maps for all modes
+:nmap - Display normal mode maps
+:imap - Display insert mode maps
+:vmap - Display visual and select mode maps
+:smap - Display select mode maps
+:xmap - Display visual mode maps
+:cmap - Display command-line mode maps
+:omap - Display operator pending mode maps
 
  freqently used commands
  [keys]                    [count]   [toInsert]  [actions]
@@ -193,13 +202,21 @@ d)Clear the highlights temparorily after search by "/": ":noh"
 f)Build tags for new plugins: helptags ALL
 
 2.[Paste]
-<Ctrl-r>"  - Paste from Vim's internal clipboard.
-<Ctrl-r>*  - paste from the system's clipboard.
 
 registers:
-<ctrl-r> "register_name - access the register in INSERT or COMMAND mode
+:reg - To access all currently defined registers type
+<ctrl-r> register_name - access the register in INSERT or COMMAND mode
 "register_name -  access the register in NORMAL mode
-  
+eg:
+"kyy - copy current line into register 'k' in normal mode
+"Kyy - append to a register by using a capital letter in normal mode
+"kp - paste the content from register 'k' in normal mode
+"+p - To paste from system clipboard on Linux in normal mode
+"*p - To paste from system clipboard on Windows in normal mode
+<ctrl-r>"  - Paste from Vim's internal clipboard.
+<ctrl-r>*  - paste from the Windows system's clipboard.
+<ctrl-r>+  - paste from the Linux system's clipboard.
+
 3.[Search]
 a) To search, in NORMAL mode, type "/" followed by search key word for forward search, "?" for backward search 
 b) To replace, in EX mode: [range]s/search/replace/[gc]: 
@@ -208,6 +225,11 @@ g: optional, without "g", only replace the first occurrence
 c: optional, confirmation needed for replacement 
 :%s/search/replace/: search the whole file enter VISUAL mode and type the command, 
 to search in the selected range, note that DON'T delete the existing characters in EX line which indicating the ranges
+to replace word under cursor:
+:%s/<c-r><c-w>/new value/g)  - when in EX mode, ctrl-r and ctrl-w will copy the word under cursor into command line
+:%s/<c-r><c-a>/new value/g)  - when in EX mode, ctrl-r and ctrl-a will copy the WORD under cursor into command line
+:bufdo %s/string/replacement/g - replace in all open files
+:cdo %s/string/replacement/g - replace in all files in quickfix list
 c) find: find file in vim path and edit it. show "path": set path?
 d) vimgrep | grep: search in system, but slower
 e) search using "ripgrep": (by setting "grepprg" in .vimrc, you can do following: (other tools like ag, ack may slower)
@@ -379,4 +401,15 @@ to view the current scheme: color
 1) change file format to linux or windows: set fileformat=unix|dos|mac
 2) to replace windows new line (displayed as ^M), use "\r" to search: %s/\r//
 
+[Help]
+to get all internal key bindings for ctrl in vim:
+:help <C-W>
+
+[fold]
+:help folding
+za - toggle foldA
+zM - Close all folds (all lines folded at top level)
+zR - Open all folds
+zj - move to next leve fold
+zk - move to previous level fold
 

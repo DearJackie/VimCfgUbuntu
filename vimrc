@@ -268,6 +268,11 @@ set noswapfile
 " mamke sure the session file can be used by both windows and unix like system
 set sessionoptions+=unix,slash
 
+" enable fold by default
+set foldmethod=syntax
+set foldlevel=100
+set foldclose=all
+
 " set the register '+' as the default(unamed), thus each time
 " when yank(y) or paste(p), Vim will use system clipboard '+'
 if has('clipboard')
@@ -312,11 +317,11 @@ nmap <leader>lt            :e $linuxtips_file <CR> " short key to linux tips fil
 " open a merminal under the current directory, using "term" command directly
 " nmap <leader>term          :let $VIM_DIR=expand('%:p:h')<CR> :terminal<CR>cd $VIM_DIR<CR> 
 nmap <leader>h             :nohlsearch<CR>  " clear highlights after search
-nmap <leader>cd            :cd %:p:h<CR>    " change to the directory of the currently open file for all windows
+nmap <leader>ccd           :cd %:p:h<CR>    " change to the directory of the currently open file for all windows
 nmap <leader>lcd           :lcd %:p:h<CR>   " change to the directory of the currently open file for the current window
 nmap <leader>bd            :bd <CR>         " close the current buffer, buffer is put into unlisted list
 nmap <leader>bw            :bw <CR>         " close the current buffer, buffer is swiped
-nmap <leader>co            :copen <CR>         " open quickfix window
+nmap <leader>co            :botright copen <CR>         " open quickfix window on the right
 nmap <leader>cc            :cclose <CR>        " close quickfix window
 nmap <leader>cn            :cnext <CR>         " jump to next error
 nmap <leader>cp            :cprevious <CR>     " jump to previous error
@@ -340,7 +345,7 @@ nmap <leader>path         :call AddSearchPath() <CR>
 " ------NERDTree ------- {{{
 let g:NERDTreeQuitOnOpen = 1 "automatically close NerdTree when you open a file
 let g:NERDTreeWinPos = "right"
-map <leader>o :NERDTreeFind <cr>   " View the current buffer in NERDTree
+map <leader>l :NERDTreeFind <cr>   " View the current buffer in NERDTree
 nmap <C-F10>    :NERDTreeToggle <cr> 
 "
 "" Check if NERDTree is open or active
@@ -387,10 +392,11 @@ let g:gutentags_modules = ['ctags', 'gtags_cscope']
 "let g:gutentags_define_advanced_command = 1
 
 " config project root markers, besides VCS markers such as .git, .svn etc.
-let g:gutentags_project_root = ['.root']
+let g:gutentags_project_root = ['.tags']
 
 " generate databases in my cache directory, prevent gtags files polluting my project
-let g:gutentags_cache_dir = expand('~/.tagscache')
+"let g:gutentags_cache_dir = expand('~/.tagscache')
+let g:gutentags_cache_dir = expand(getcwd().'/.tags')
 
 " change focus to quickfix window after search (optional).
 let g:gutentags_plus_switch = 1
@@ -418,12 +424,32 @@ nmap <leader>tup   :GutentagsUpdate<CR>
 "noremap <leader>cz :GscopeFind z <C-R><C-W><cr>                       " Find current word in ctags database
 
 " define a short command to find any symbol in Command mode instead of GscopeFind to find symbol definition
+" find any symbol by inputs
 noremap <leader>fs :GscopeFind g 
-noremap <F7> :GscopeFind g 
+
+" find the word symbol under cursor
+noremap <F7> :GscopeFind g <C-R><C-W><CR> 
 
 " }}}  end of Gutentags
 "
-"
+" define a short key to use rg in vim to search strings(word)
+nnoremap <F9> :Rg <C-R><C-W><CR>
+
+" define a short key to search files in the current directory using FZF
+nnoremap <F10> :Files <CR>
+
+" define a short key to search files in the open buffer list using FZF
+nnoremap <F5> :Buffers <CR>
+
+" short key to replace windows line ending ^M to linux line ending
+noremap <F2> :%s/\r//g <CR>
+
+" insert new line after current line without leaving normal mode
+nnoremap <leader>o o<ESC>
+
+" insert new line before current line without leaving normal mode
+nnoremap <leader>O O<ESC>
+
 """""""""""""""""""end of plugin""""""""""""""""""""""""""""""""""""""
 
 
