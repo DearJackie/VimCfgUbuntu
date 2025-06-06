@@ -30,6 +30,52 @@ uname -a : check linux version, including kernel etc.
 cat /etc/*release : get more detail for release information
 
 [packages]
-apt search keyword - search a package online without install
-apt search .   - search all packages
+1. apt search keyword - search a package online without install
+   apt search .   - search all packages online
+   apt search --names-only keyword - search the package names with keyword
+   apt search ^keyword$ - search the exactly word
+  Note: if you can't find any package, you need run "apt-get update" first to establish the packages cache
+2. apt list --installed : list all installed packages in system
+   apt list --installed | grep python: check if python is installed in system
+   dpkg --get-selections | grep python : check if the package is installed in system
+   dpkg -l | grep python : check if the package is installed in system [simple version]
+3. which <command> : local a command in system
+4. ls --color-always | less -R : less with color. most commands support --color=always
+   unbuffer apt list | less -R : list specified package using less with color, you need to install "expect" first
+	  suo apt install expect : install command "unbuffer"
+
+[misc. commands]
+1. Getting the default command line text editor used in system
+	$ sudo update-alternatives --config editor : change the default command line editor
+	$ update-alternatives --query editor
+	$ echo $EDITOR  - NOT working
+	 to set the default editor you can add the following to your shell configuration ( ~/.bashrc):
+	export VISUAL="/usr/bin/nano"
+	export EDITOR="$VISUAL
+
+[files, directory]
+A file type helps us in identifying the type of content that is saved in the file. Linux supports six different types of files.
+The different types of names of files present are :
+- Regular file: Regular or ordinary files store data of various content types such as text,
+	audio, video, images, scripts, and programs. In Linux, regular files can be created with or without an extension.
+- Directory file: File systems use directories to organize files in a hierarchy. Directories are
+	also files, but instead of storing data, they store the location of other files. Each directory entry stores the name and location of a single file.
+- Link file: Link files allow us to use a file with a different filename and from a different location.
+	For this, we use link files. A link file is a pointer to another file. There are two types of links: a hard link and a symbolic or soft link.
+- Special file: Linux treats all hardware devices (such as hard drives, printers, monitors, terminal emulators, and CD/DVD drives) as special files.
+	Linux places all special files or device files under the /dev directory. There are two types of special files: a character special file and a block special file.
+- Socket file: A socket is a communication endpoint that applications use to exchange data. Each application that provides services
+	to other applications or remote clients uses a socket to accept connections. Each socket has an associated IP address and port number that allow it to accept connections from clients.
+- Named pipe file: Named pipe files are empty pipe files. The kernel processes named pipe files without writing them to the file system.
+	Named pipe files can exist anywhere in the file system. They are also called the FIFO (First In First Out) files.
+
+How To Create A File In Linux:
+$ touch <filename>
+$ cat > <filename>
+$ echo "message" > <filename>
+$ printf
+
+Indentify the type of a file:
+$ file <filename>
+
 

@@ -345,7 +345,7 @@ nmap <leader>path         :call AddSearchPath() <CR>
 " ------NERDTree ------- {{{
 let g:NERDTreeQuitOnOpen = 1 "automatically close NerdTree when you open a file
 let g:NERDTreeWinPos = "right"
-map <leader>l :NERDTreeFind <cr>   " View the current buffer in NERDTree
+map <leader>lo :NERDTreeFind <cr>   " View the current buffer in NERDTree
 nmap <C-F10>    :NERDTreeToggle <cr> 
 "
 "" Check if NERDTree is open or active
@@ -402,7 +402,7 @@ let g:gutentags_cache_dir = expand(getcwd().'/.tags')
 let g:gutentags_plus_switch = 1
 
 " shortkey to create a root marker for gutentags tags generating, make sure to go to the required directory before running this command
-nmap <leader>rtags   :!mkdir -p .root<CR><CR>
+"nmap <leader>rtags   :!mkdir -p .tags<CR><CR>
 
 " manual update tags update (Gutentags), both ctags and gtags(in a separate folder
 " this command only available when a recognicable file is open
@@ -440,6 +440,7 @@ nnoremap <F10> :Files <CR>
 
 " define a short key to search files in the open buffer list using FZF
 nnoremap <F5> :Buffers <CR>
+nnoremap <leader>ls :Buffers <CR>
 
 " short key to replace windows line ending ^M to linux line ending
 noremap <F2> :%s/\r//g <CR>
