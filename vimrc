@@ -432,24 +432,42 @@ noremap <F7> :GscopeFind g <C-R><C-W><CR>
 
 " }}}  end of Gutentags
 "
+" F1 reserved by vim and many applications for help 
+
+" short key to replace windows line ending ^M to linux line ending
+noremap <F2> :%s/\r//g <CR>
+
+" short key to replace word under cursor 
+noremap <F3> :%s/<C-R><C-W>/
+
+"noremap <F4> :
+"
+"noremap <F5> :
+"
+"noremap <F6> :
+"
+" F7 for Gscope plugin defined above
+
+" F8 for TagbarToggle plugin defined above
+
 " define a short key to use rg in vim to search strings(word)
 nnoremap <F9> :Rg <C-R><C-W><CR>
 
 " define a short key to search files in the current directory using FZF
 nnoremap <F10> :Files <CR>
 
-" define a short key to search files in the open buffer list using FZF
-nnoremap <F5> :Buffers <CR>
-nnoremap <leader>ls :Buffers <CR>
+" F11 reserved by windows powershell terminal and most IDEs for full screen
 
-" short key to replace windows line ending ^M to linux line ending
-noremap <F2> :%s/\r//g <CR>
+"noremap <F12> :
 
 " insert new line after current line without leaving normal mode
 nnoremap <leader>o o<ESC>
 
 " insert new line before current line without leaving normal mode
 nnoremap <leader>O O<ESC>
+
+" define a short key to search files in the open buffer list using FZF
+nnoremap <leader>ls :Buffers <CR>
 
 """""""""""""""""""end of plugin""""""""""""""""""""""""""""""""""""""
 

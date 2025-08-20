@@ -4,6 +4,10 @@
 # You can run this script in any directory as it uses absolute path
 #
 #
+# install vim-gtk3
+echo ".....installing vim-gtk3...."
+sudo apt-get install vim-gtk3
+
 # install the universal ctags
 echo ".....installing univeral-ctags...."
 sudo apt-get install universal-ctags 

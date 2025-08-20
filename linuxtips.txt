@@ -26,9 +26,12 @@ nothing for regular files
 ‘>’ doors
 
 [system commands]
-uname -a : check linux version, including kernel etc.
-cat /etc/*release : get more detail for release information
-
+$ uname -a : check linux version, including kernel etc.
+$ cat /etc/*release : get more detail for release information
+$ cat /etc/os-release : get more detail for release information
+$ lsb_release -a : list the release version
+$ hostnamectl : must boot with systemd
+ 
 [packages]
 1. apt search keyword - search a package online without install
    apt search .   - search all packages online
@@ -39,6 +42,11 @@ cat /etc/*release : get more detail for release information
    apt list --installed | grep python: check if python is installed in system
    dpkg --get-selections | grep python : check if the package is installed in system
    dpkg -l | grep python : check if the package is installed in system [simple version]
+   apt-cache show <package_name>: show package description
+   dpkg -s <package_name>: show package description
+You can get the list of installed files with:
+   apt-file list package-name
+   dpkg -L package-name
 3. which <command> : local a command in system
 4. ls --color-always | less -R : less with color. most commands support --color=always
    unbuffer apt list | less -R : list specified package using less with color, you need to install "expect" first
@@ -77,5 +85,44 @@ $ printf
 
 Indentify the type of a file:
 $ file <filename>
+
+[find/search]
+search for files and directories in specified path based on differen criteria.
+find [-H] [-L] [-P] [-Olevel] [-D debugopts] [path...] [expression]
+$find . -type f \( -name '*.jpg' -or -name '*.png' \)   - find files with several patterns, case sensitive
+$find . -type f --iname *.pl  - find file name case insensitive with pattern
+$find . -type (f: files, d: directories, l: symbol links)
+
+grep: print lines that match patterns IN FILES. A FILE of “-” stands for standard input. 
+grep [OPTION]... PATTERNS [FILE]...
+       grep [OPTION]... -e PATTERNS ... [FILE]...
+       grep [OPTION]... -f PATTERN_FILE ... [FILE]...
+grep searches for patterns in each FILE.
+
+fd-find: is replacement of find, more faster, also can replace grep for finding content in files
+ fd [FLAGS/OPTIONS] [<pattern>] [<path>...]
+ fzf: a fuzzer finder, interactive search
+fd  -t, --type <filetype>...
+            Filter the search by type:
+              'f' or 'file':         regular files
+              'd' or 'directory':    directories
+              'l' or 'symlink':      symbolic links
+              's' or 'socket':       socket
+              'p' or 'pipe':         named pipe (FIFO)
+
+              'x' or 'executable':   executables
+              'e' or 'empty':        empty files or directories
+$fd .c .  - search all C files in current directory recursively
+
+reggrep to replace grep. ripgrep (rg) recursively searches the current directory for a regex pattern.
+    rg [OPTIONS] PATTERN [PATH ...]
+    rg [OPTIONS] -e PATTERN ... [PATH ...]
+    rg [OPTIONS] -f PATTERNFILE ... [PATH ...]
+    rg [OPTIONS] --files [PATH ...]
+    rg [OPTIONS] --type-list
+-t, --type <TYPE>... : search only types
+-e, --regexp <PATTERN>...  : search with pattern
+-s, --case-sensitive
+$ rg -e -foo: search recursively in the current directory for "-foo"
 
 
