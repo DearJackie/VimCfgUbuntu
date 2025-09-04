@@ -16,7 +16,7 @@ sudo apt-get install universal-ctags
 echo ".....installing GNU global and gtags...."
 sudo apt-get install global
 
-# install ripgrep, which is to replace grep to find content inside files, much faster
+# install ripgrep (rg), which is to replace grep to find content inside files, much faster
 echo ".....installing ripgrep...."
 sudo apt-get install ripgrep
 
