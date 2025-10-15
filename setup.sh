@@ -29,7 +29,11 @@ sudo ln -s $(which fdfind) /usr/local/bin/fd
 
 # install git
 echo ".....installing git...."
-sudo apt install git #git-all
+sudo apt install git git-lfs
+
+# add support to compress/decompress .7z and .rar files (optional)
+#echo ".....installing 7z...."
+#sudo apt install p7zip-full p7zip-rar
 
 # install the fzf fuzzer finder, which is a filter from list, install LATEST from github
 echo ".....installing fzf...."

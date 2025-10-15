@@ -94,6 +94,8 @@ to list all key mappings:
  ctrl - T,                  N         No         jump to [count] older entry in the tag stack
  ctrl - F,                  N         No         page forward, the same as "PgDn" key
  ctrl - B,                  N         No         page backword, the same as "PgUp" key
+ ctrl - D,                  N         No         scroll half page down 
+ ctrl - U,                  N         No         scroll half page up 
  ctrl - E,                  N         No         scroll one line down 
  ctrl - Y,                  N         No         scroll one line up 
  ctrl - P,                  N         No         <UP> in COMMAND LINE mode: previous
@@ -412,4 +414,20 @@ zM - Close all folds (all lines folded at top level)
 zR - Open all folds
 zj - move to next leve fold
 zk - move to previous level fold
+
+[quickfix]
+used to find a list of positions in files.
+:copen - open the quickfix window
+:cclose - close the quickfix window
+:cc[!] [nr]		Display error [nr].  If [nr] is omitted, the same error display again
+:ll[!] [nr]		same as ":cc", display the location list for the current window 
+
+[autocomplete]
+
+[tab, space]
+set tabstop=4 " Number of spaces that a <Tab> in the file counts for
+set shiftwidth=4 " Number of spaces to use for each step of (auto)indent
+set expandtab " Use spaces instead of tabs
+
+:retab - convert all existing tabs to spaces using existing settings
 

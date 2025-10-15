@@ -125,4 +125,79 @@ reggrep to replace grep. ripgrep (rg) recursively searches the current directory
 -s, --case-sensitive
 $ rg -e -foo: search recursively in the current directory for "-foo"
 
+[disk size, file size]
+$ du -sh */   - show size of all directories in the current directory
+$ du -sch .[!.]* *   - show all directories including hidden of the current diretory with total sizes
+$ du -sch .[!.]* * | sort -h  - sort the result as well 
+$ du -h -d 2 */   - show size of directories 2 depth relative to the current directory
+$ df -h       - show disk size usage
+
+[process, jobs]
+$jobs -l %n  - show job number n (without n, show all jobs)
+$fg %n - move job to foreground and activate
+$bg %n - move job to background and activate
+$kill %n - kill job
+$disown %n - clean up job
+to run a command in background and no prompt (redirect stdout/stderr to
+/dev/null:
+$ command > /dev/null 2>&1 &
+
+NOTE: when using job ID, you put "%n", when PID, just the number
+
+[compress, decompress, zip/unzip]
+https://www.7-zip.org/
+Common Compression Formats:
+.zip - ideal for everyday file compression tasks, such as combining files for
+       convenient sharing or email attachments. Popular for each OS.
+.iso - utilized extensively for software and game distribution.
+.rar - Known for achieving high compression ratios, RAR files are common in archiving large file collections or creating split archives.
+.tar - AR is used to gather multiple files into a single archive without compression.
+       It is often combined with compression methods like GZIP or BZIP2, resulting in formats like .tar.gz or .tar.bz2.
+.7z - is recognized for its strong compression capabilities and is often chosen when high efficiency is required.
+       It allows large files to be compressed significantly and supports encryption.
+.gz - Commonly used to compress web content for more efficient delivery,
+      GZIP reduces the size of web pages and scripts to improve load times.
+      It is often paired with TAR to compress multiple files in Unix-like systems.
+      Works on single file, NOT directory.
+
+- preinstalled tools in Debian system:
+gzip[.gz]: GNU zip, compress or uncompress files. Works with only single files(NOT directory),
+      ie, each file will be compressed into a separate .gz file if many files.
+      Compress or uncompress FILEs (by default, compress FILES in-place).
+      gunzip: Uncompress FILEs (by default, in-place).
+      Best situable for compressing large single files.
+      eg:
+      gzip -d -S .pack Renesas.FSP.pack  - decompress the file with suffix ".pack" which is actually compressed in .zip.
+      tar -zcvf output_file_name directory_to_compress - compress(create -c) a directory in place using gzip (-z)
+      tar -xvf output_file_name -C directory_to_compress - extract(create -x) a directory in place using gzip (-z)
+bzip2/bunzip2: a block-sorting file compressor.
+tar: GNU 'tar' saves many files together into a single tape or disk archive, and can restore individual files from the archive.
+    Main operation mode:
+  -c, --create               create a new archive
+  -t, --list                 list the contents of an archive
+  -x, --extract, --get       extract files from an archive
+   options:
+  -C, --directory=DIR        change to directory DIR
+  -f, --file=ARCHIVE         use archive file or device ARCHIVE
+    Compression options:
+  -a, --auto-compress        use archive suffix to determine the compression program
+  -I, --use-compress-program=PROG filter through PROG (must accept -d)
+  -j, --bzip2                filter the archive through bzip2
+  -J, --xz                   filter the archive through xz
+      --lzip                 filter the archive through lzip
+      --lzma                 filter the archive through xz
+      --lzop                 filter the archive through lzop
+      --no-auto-compress     do not use archive suffix to determine the compression program
+      --zstd                 filter the archive through zstd
+  -z, --gzip, --gunzip, --ungzip   filter the archive through gzip (.gz)
+  -Z, --compress, --uncompress   filter the archive through compress
+Use gzip or bzip2 for single files and tar for directories. Popular in Linux.
+
+zip[.zip]: compress different files into one single .zip file. 
+unzip [-Z] [-opts[modifiers]] file[.zip] [list] [-x xlist] [-d exdir]
+      unzip: Default action is to extract files in list, except those in xlist, to exdir
+      Best situable for compressing multiple small files and security.
+      eg:
+      unzip -q source_file_list -d target_directory
+
 

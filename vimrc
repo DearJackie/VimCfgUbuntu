@@ -172,7 +172,7 @@ endif
 set ruler
 
 " show cursor line for current line
-set cursorline
+"set cursorline
 
 " show line number in the left side of the editor
 set number
@@ -183,8 +183,8 @@ set scrolloff=0
 " show column limit
 set colorcolumn=80
 
-" to avoid automatical wrapping when editing text
-set textwidth=120
+" to avoid automatical wrapping when editing text: break into new line after 120 chars
+set textwidth=80
 
 " new window locates right
 set splitright
@@ -213,7 +213,9 @@ set laststatus=2
 set nowrap
 
 " set tab width
-set tabstop=4
+set tabstop=4 " Number of spaces that a <Tab> in the file counts for
+set shiftwidth=4 " Number of spaces to use for each step of (auto)indent
+set expandtab " Use spaces instead of tabs
 
 " show tab in text, show trailing space
 set listchars=tab:>-,trail:.
@@ -468,6 +470,24 @@ nnoremap <leader>O O<ESC>
 
 " define a short key to search files in the open buffer list using FZF
 nnoremap <leader>ls :Buffers <CR>
+
+" settings of curosr shapes 
+"
+" Reference chart of values:
+"   Ps = 0  -> blinking block.
+"   Ps = 1  -> blinking block (default).
+"   Ps = 2  -> steady block.
+"   Ps = 3  -> blinking underline.
+"   Ps = 4  -> steady underline.
+"   Ps = 5  -> blinking bar (xterm).
+"   Ps = 6  -> steady bar (xterm).
+
+" Line cursor in Insert lhll
+let &t_SI = "\e[6 q"
+" Block cursor in Normal mode \e[6 q
+let &t_EI = "\e[2 q"
+" blinking block cursor in Replace mode
+let &t_SR = "\e[1 q"
 
 """""""""""""""""""end of plugin""""""""""""""""""""""""""""""""""""""
 
