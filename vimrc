@@ -130,6 +130,10 @@ if has('clipboard')
   set clipboard=unnamedplus
 endif
 
+if has('nvim')
+  set clipboard=unnamedplus
+endif
+
 " enable 'find' recursively in current working directory (pwd)
 set path+=**
 
@@ -214,12 +218,14 @@ nmap <C-F10>    :NERDTreeToggle <cr>
 "
 " }}} end of NERDTree 
 
+if !has('nvim')
 " ------Cscope ------- {{{
 set cscopetag   " use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t' and search cscope tag first
 set csto=0      " check cscope for definition of a symbol before checking ctags: set to 1, if you want the reverse search order.
 set cscopequickfix=s-,c-,d-,i-,t-,e-,a-,g-,f-   " enable quickfix for cscope, note that this will automatically jump to 1st match all the time
 
 " }}} end of Cscope
+endif
 
 " ------Tagbar ------- {{{
 "  this plugin displays the tags in a separate window
