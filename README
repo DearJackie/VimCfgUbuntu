@@ -126,5 +126,8 @@ tags generators
 -  -Vim.
 -  -YACC.
 
+[NeoVIM]
+to change the default configuration file location in Windows, add an enviornment variable XDG_CONFIG_HOME=%USERPROFILE%.
+restart Nvim, the configuration will take effect.
 
 
