@@ -38,7 +38,7 @@ set textwidth=80
 " new window locates right
 set splitright
 
-" new window locates below 
+" new window locates below
 set splitbelow
 
 " set style of status line
@@ -94,7 +94,7 @@ set nowrapscan
 " enable increament search
 set incsearch
 
-" smart ident 
+" smart ident
 set autoindent
 set smartindent
 
@@ -110,11 +110,11 @@ set noautochdir
 " never generate backup file
 set nobackup
 
-set noswapfile 
+set noswapfile
 
 " mamke sure the session file can be used by both windows and unix like system
 " never generate swap file
-set noswapfile 
+set noswapfile
 
 " mamke sure the session file can be used by both windows and unix like system
 set sessionoptions+=unix,slash
@@ -154,19 +154,19 @@ set rtp+=~/.fzf
 "
 " customized color scheme by plugins
 "colorscheme tomorrow-night
-colorscheme elflord  
+colorscheme elflord
 "
 " key mappings
 let mapleader=" "          " one space as the map leader
 nmap <leader>nb            :bn <CR> " Ctrl-Tab not working in terminal, but can work in Gvim.
 nmap <leader>e             :e $MYVIMRC <CR>
-let $vimtips_file=fnamemodify($MYVIMRC, ":s?vimrc?vimtips.txt?:p")  
+let $vimtips_file=fnamemodify($MYVIMRC, ":s?vimrc?vimtips.txt?:p")
 nmap <leader>vt            :e $vimtips_file<CR> " short key to vim tips file
-let $linuxtips_file=fnamemodify($MYVIMRC, ":s?vimrc?linuxtips.txt?:p")  
+let $linuxtips_file=fnamemodify($MYVIMRC, ":s?vimrc?linuxtips.txt?:p")
 nmap <leader>lt            :e $linuxtips_file <CR> " short key to linux tips file
 
 " open a merminal under the current directory, using "term" command directly
-" nmap <leader>term          :let $VIM_DIR=expand('%:p:h')<CR> :terminal<CR>cd $VIM_DIR<CR> 
+" nmap <leader>term          :let $VIM_DIR=expand('%:p:h')<CR> :terminal<CR>cd $VIM_DIR<CR>
 nmap <leader>h             :nohlsearch<CR>  " clear highlights after search
 nmap <leader>ccd           :cd %:p:h<CR>    " change to the directory of the currently open file for all windows
 nmap <leader>lcd           :lcd %:p:h<CR>   " change to the directory of the currently open file for the current window
@@ -188,108 +188,115 @@ function! AddSearchPath()
     let searchpath=substitute(thiscwd, '\', '/', 'g')
 	let allpath=searchpath."/**"
 	" pass the current working directory as the argument to the option 'path'
-   let &path='.,' . allpath 
+   let &path='.,' . allpath
 endfunction
 " add the current working directory as search path for 'gf' etc.
 nmap <leader>path         :call AddSearchPath() <CR>
 
+" You can wrap that block in a conditional which uses the exists() function to
+" check if a variable, command or function defined by the plugin is known to vim.
 " ------NERDTree ------- {{{
-let g:NERDTreeQuitOnOpen = 1 "automatically close NerdTree when you open a file
-let g:NERDTreeWinPos = "right"
-map <leader>lo :NERDTreeFind <cr>   " View the current buffer in NERDTree
-nmap <C-F10>    :NERDTreeToggle <cr> 
-"
-"" Check if NERDTree is open or active
-"function! s:IsNERDTreeOpen()        
-"  return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
-"endfunction
-"
-"" Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
-"" file, and we're not in vimdiff
-"function! s:SyncTree()
-"  if &modifiable && s:IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
-"    NERDTreeFind
-"   " wincmd p   " switch cursor back to previous window
-"  wincmd l   " assume the NERDTree is on the left side by default
-"  endif
-"endfunction
-"" Highlight currently open buffer in NERDTree
-"autocmd BufEnter * call s:SyncTree()
-"
-" }}} end of NERDTree 
+if exists("NERDTreeToggle") " g:loaded_nerd_tree")
+  let g:NERDTreeQuitOnOpen = 1 "automatically close NerdTree when you open a file
+  let g:NERDTreeWinPos = "right"
+  map <leader>lo :NERDTreeFind <cr>   " View the current buffer in NERDTree
+  nmap <C-F10>    :NERDTreeToggle <cr>
+  "
+  "" Check if NERDTree is open or active
+  "function! s:IsNERDTreeOpen()
+  "  return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
+  "endfunction
+  "
+  "" Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
+  "" file, and we're not in vimdiff
+  "function! s:SyncTree()
+  "  if &modifiable && s:IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
+  "    NERDTreeFind
+  "   " wincmd p   " switch cursor back to previous window
+  "  wincmd l   " assume the NERDTree is on the left side by default
+  "  endif
+  "endfunction
+  "" Highlight currently open buffer in NERDTree
+  "autocmd BufEnter * call s:SyncTree()
+  "
+  " }}} end of NERDTree
+endif
 
-if !has('nvim')
+if exists("cscope") " g:loaded_cscope")
 " ------Cscope ------- {{{
 set cscopetag   " use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t' and search cscope tag first
 set csto=0      " check cscope for definition of a symbol before checking ctags: set to 1, if you want the reverse search order.
 set cscopequickfix=s-,c-,d-,i-,t-,e-,a-,g-,f-   " enable quickfix for cscope, note that this will automatically jump to 1st match all the time
-
 " }}} end of Cscope
 endif
 
-" ------Tagbar ------- {{{
-"  this plugin displays the tags in a separate window
-let g:tagbar_left=1            " tagbar windown locates on the left
-let g:tagbar_autofocus=1       " cursor will move to tagbar window when it's opened
-let g:tagbar_autoclose=1       " close tagbar automatically when selected one tag
-nmap <F8> :TagbarToggle <cr> 
-" }}}  end of Tagbar
+if exists("TagbarToggle") " g:loaded_tagbar")
+  " ------Tagbar ------- {{{
+  "  this plugin displays the tags in a separate window
+  let g:tagbar_left=1            " tagbar windown locates on the left
+  let g:tagbar_autofocus=1       " cursor will move to tagbar window when it's opened
+  let g:tagbar_autoclose=1       " close tagbar automatically when selected one tag
+  nmap <F8> :TagbarToggle <cr>
+  " }}}  end of Tagbar
+endif
 "
-" ------Gutentags and Gutentags_plus ------- {{{
-" enable logs
-"let g:gutentags_trace = 1
+if exists("GutentagsUpdate") " g:loaded_gutentags")
+  " ------Gutentags and Gutentags_plus ------- {{{
+  " enable logs
+  "let g:gutentags_trace = 1
 
-" enable both ctags and gtags module
-let g:gutentags_modules = ['ctags', 'gtags_cscope']
+  " enable both ctags and gtags module
+  let g:gutentags_modules = ['ctags', 'gtags_cscope']
 
-"let g:gutentags_define_advanced_command = 1
+  "let g:gutentags_define_advanced_command = 1
 
-" config project root markers, besides VCS markers such as .git, .svn etc.
-let g:gutentags_project_root = ['.tags']
+  " config project root markers, besides VCS markers such as .git, .svn etc.
+  let g:gutentags_project_root = ['.tags']
 
-" generate databases in my cache directory, prevent gtags files polluting my project
-"let g:gutentags_cache_dir = expand('~/.tagscache')
-let g:gutentags_cache_dir = expand(getcwd().'/.tags')
+  " generate databases in my cache directory, prevent gtags files polluting my project
+  "let g:gutentags_cache_dir = expand('~/.tagscache')
+  let g:gutentags_cache_dir = expand(getcwd().'/.tags')
 
-" change focus to quickfix window after search (optional).
-let g:gutentags_plus_switch = 1
+  " change focus to quickfix window after search (optional).
+  let g:gutentags_plus_switch = 1
 
-" shortkey to create a root marker for gutentags tags generating, make sure to go to the required directory before running this command
-"nmap <leader>rtags   :!mkdir -p .tags<CR><CR>
+  " shortkey to create a root marker for gutentags tags generating, make sure to go to the required directory before running this command
+  "nmap <leader>rtags   :!mkdir -p .tags<CR><CR>
 
-" manual update tags update (Gutentags), both ctags and gtags(in a separate folder
-" this command only available when a recognicable file is open
-nmap <leader>tup   :GutentagsUpdate<CR>/nvimi
-" Gutentags_plus; GscopeFind {querytype} {name}
-" disable the default keymaps by if wan:
-" let g:gutentags_plus_nomap = 1
-" default keymap 	                                                    desc
-"noremap <leader>cs :GscopeFind s <C-R><C-W><cr>                       " Find symbol (reference) under cursor
-"noremap <leader>cg :GscopeFind g <C-R><C-W><cr>                       " Find symbol definition under cursor
-"noremap <leader>cd :GscopeFind c <C-R><C-W><cr>                       " Functions called by this function
-"noremap <leader>cc :GscopeFind t <C-R><C-W><cr>                       " Functions calling this function
-"noremap <leader>ct :GscopeFind e <C-R><C-W><cr>                       " Find text string under cursor
-"noremap <leader>ce :GscopeFind f <C-R>=expand("<cfile>")<cr><cr>      " Find egrep pattern under cursor
-"noremap <leader>cf :GscopeFind i <C-R>=expand("<cfile>")<cr><cr>      " Find file name under cursor
-"noremap <leader>ci :GscopeFind d <C-R><C-W><cr>                       " Find files #including the file name under cursor
-"noremap <leader>ca :GscopeFind a <C-R><C-W><cr>                       " Find places where current symbol is assigned
-"noremap <leader>cz :GscopeFind z <C-R><C-W><cr>                       " Find current word in ctags database
+  " manual update tags update (Gutentags), both ctags and gtags(in a separate folder
+  " this command only available when a recognicable file is open
+  nmap <leader>tup   :GutentagsUpdate<CR>
+  " Gutentags_plus; GscopeFind {querytype} {name}
+  " disable the default keymaps by if wan:
+  " let g:gutentags_plus_nomap = 1
+  " default keymap 	                                                    desc
+  "noremap <leader>cs :GscopeFind s <C-R><C-W><cr>                       " Find symbol (reference) under cursor
+  "noremap <leader>cg :GscopeFind g <C-R><C-W><cr>                       " Find symbol definition under cursor
+  "noremap <leader>cd :GscopeFind c <C-R><C-W><cr>                       " Functions called by this function
+  "noremap <leader>cc :GscopeFind t <C-R><C-W><cr>                       " Functions calling this function
+  "noremap <leader>ct :GscopeFind e <C-R><C-W><cr>                       " Find text string under cursor
+  "noremap <leader>ce :GscopeFind f <C-R>=expand("<cfile>")<cr><cr>      " Find egrep pattern under cursor
+  "noremap <leader>cf :GscopeFind i <C-R>=expand("<cfile>")<cr><cr>      " Find file name under cursor
+  "noremap <leader>ci :GscopeFind d <C-R><C-W><cr>                       " Find files #including the file name under cursor
+  "noremap <leader>ca :GscopeFind a <C-R><C-W><cr>                       " Find places where current symbol is assigned
+  "noremap <leader>cz :GscopeFind z <C-R><C-W><cr>                       " Find current word in ctags database
 
-" define a short command to find any symbol in Command mode instead of GscopeFind to find symbol definition
-" find any symbol by inputs
-noremap <leader>fs :GscopeFind g 
+  " define a short command to find any symbol in Command mode instead of GscopeFind to find symbol definition
+  " find any symbol by inputs
+  noremap <leader>fs :GscopeFind g
 
-" find the word symbol under cursor
-noremap <F7> :GscopeFind g <C-R><C-W><CR> 
+  " find the word symbol under cursor
+  noremap <F7> :GscopeFind g <C-R><C-W><CR>
 
-" }}}  end of Gutentags
-"
-" F1 reserved by vim and many applications for help 
+  " }}}  end of Gutentags
+endif
+
+" F1 reserved by vim and many applications for help
 
 " short key to replace windows line ending ^M to linux line ending
 noremap <F2> :%s/\r//g <CR>
 
-" short key to replace word under cursor 
+" short key to replace word under cursor
 noremap <F3> :%s/<C-R><C-W>/
 
 "noremap <F4> :
@@ -321,7 +328,7 @@ nnoremap <leader>O O<ESC>
 " define a short key to search files in the open buffer list using FZF
 nnoremap <leader>ls :Buffers <CR>
 
-" settings of curosr shapes 
+" settings of curosr shapes
 "
 " Reference chart of values:
 "   Ps = 0  -> blinking block.
