@@ -431,3 +431,8 @@ set expandtab " Use spaces instead of tabs
 
 :retab - convert all existing tabs to spaces using existing settings
 
+[ctrl]
+How 'ctrl' works:
+https://catern.com/posts/terminal_quirks.html
+
+

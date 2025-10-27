@@ -160,9 +160,14 @@ colorscheme elflord
 let mapleader=" "          " one space as the map leader
 nmap <leader>nb            :bn <CR> " Ctrl-Tab not working in terminal, but can work in Gvim.
 nmap <leader>e             :e $MYVIMRC <CR>
-let $vimtips_file=fnamemodify($MYVIMRC, ":s?vimrc?vimtips.txt?:p")
+if has('nvim')
+    let $vimtips_file=fnamemodify($MYVIMRC, ":s?init.vim?vimtips.txt?:p")
+    let $linuxtips_file=fnamemodify($MYVIMRC, ":s?init.vim?linuxtips.txt?:p")
+else
+    let $vimtips_file=fnamemodify($MYVIMRC, ":s?vimrc?vimtips.txt?:p")
+    let $linuxtips_file=fnamemodify($MYVIMRC, ":s?vimrc?linuxtips.txt?:p")
+endif
 nmap <leader>vt            :e $vimtips_file<CR> " short key to vim tips file
-let $linuxtips_file=fnamemodify($MYVIMRC, ":s?vimrc?linuxtips.txt?:p")
 nmap <leader>lt            :e $linuxtips_file <CR> " short key to linux tips file
 
 " open a merminal under the current directory, using "term" command directly
@@ -193,103 +198,134 @@ endfunction
 " add the current working directory as search path for 'gf' etc.
 nmap <leader>path         :call AddSearchPath() <CR>
 
+"
+" Note that the .vimrc is loaded before plugins are loaded, so you can't
+" directly judge the exists of a command. You have to use VimEnter event with
+" an autocommand.
+" You can also check if the messages in :messages after entering vim.
+"
 " You can wrap that block in a conditional which uses the exists() function to
 " check if a variable, command or function defined by the plugin is known to vim.
 " ------NERDTree ------- {{{
-if exists("NERDTreeToggle") " g:loaded_nerd_tree")
-  let g:NERDTreeQuitOnOpen = 1 "automatically close NerdTree when you open a file
-  let g:NERDTreeWinPos = "right"
-  map <leader>lo :NERDTreeFind <cr>   " View the current buffer in NERDTree
-  nmap <C-F10>    :NERDTreeToggle <cr>
-  "
-  "" Check if NERDTree is open or active
-  "function! s:IsNERDTreeOpen()
-  "  return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
-  "endfunction
-  "
-  "" Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
-  "" file, and we're not in vimdiff
-  "function! s:SyncTree()
-  "  if &modifiable && s:IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
-  "    NERDTreeFind
-  "   " wincmd p   " switch cursor back to previous window
-  "  wincmd l   " assume the NERDTree is on the left side by default
-  "  endif
-  "endfunction
-  "" Highlight currently open buffer in NERDTree
-  "autocmd BufEnter * call s:SyncTree()
-  "
-  " }}} end of NERDTree
-endif
+function! SetupNERDTree()
+    if exists(":NERDTreeToggle")==2
+        echom "NERDTree exists!"
+        let g:NERDTreeQuitOnOpen = 1 "automatically close NerdTree when you open a file
+        let g:NERDTreeWinPos = "right"
+        map <leader>no :NERDTreeFind <cr>   " View the current buffer in NERDTree
+        nmap <leader>nt :NERDTreeToggle <cr>
+        "
+        "" Check if NERDTree is open or active
+        "function! s:IsNERDTreeOpen()
+        "  return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
+        "endfunction
+        "
+        "" Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
+        "" file, and we're not in vimdiff
+        "function! s:SyncTree()
+        "  if &modifiable && s:IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
+        "    NERDTreeFind
+        "   " wincmd p   " switch cursor back to previous window
+        "  wincmd l   " assume the NERDTree is on the left side by default
+        "  endif
+        "endfunction
+        "" Highlight currently open buffer in NERDTree
+        "autocmd BufEnter * call s:SyncTree()
+        "
+        " }}} end of NERDTree
+    else
+        echom "No NERDTree plugin!"
+    endif
+endfunction
+au VimEnter * call SetupNERDTree()
 
-if exists("cscope") " g:loaded_cscope")
-" ------Cscope ------- {{{
-set cscopetag   " use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t' and search cscope tag first
-set csto=0      " check cscope for definition of a symbol before checking ctags: set to 1, if you want the reverse search order.
-set cscopequickfix=s-,c-,d-,i-,t-,e-,a-,g-,f-   " enable quickfix for cscope, note that this will automatically jump to 1st match all the time
-" }}} end of Cscope
-endif
+function! SetupCscope()
+    if (exists(":cscope")==2)
+        echom "cscope exists!"
+        " ------Cscope ------- {{{
+        set cscopetag   " use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t' and search cscope tag first
+        set csto=0      " check cscope for definition of a symbol before checking ctags: set to 1, if you want the reverse search order.
+        set cscopequickfix=s-,c-,d-,i-,t-,e-,a-,g-,f-   " enable quickfix for cscope, note that this will automatically jump to 1st match all the time
+        " }}} end of Cscope
+    else
+        echom "cscope not installed!"
+    endif
+endfunction
+au VimEnter * call SetupCscope()
 
-if exists("TagbarToggle") " g:loaded_tagbar")
-  " ------Tagbar ------- {{{
-  "  this plugin displays the tags in a separate window
-  let g:tagbar_left=1            " tagbar windown locates on the left
-  let g:tagbar_autofocus=1       " cursor will move to tagbar window when it's opened
-  let g:tagbar_autoclose=1       " close tagbar automatically when selected one tag
-  nmap <F8> :TagbarToggle <cr>
-  " }}}  end of Tagbar
-endif
-"
-if exists("GutentagsUpdate") " g:loaded_gutentags")
-  " ------Gutentags and Gutentags_plus ------- {{{
-  " enable logs
-  "let g:gutentags_trace = 1
+function! SetupTagbar()
+    if (exists(":TagbarToggle")==2)
+        echom "TagbarToggle exists!"
+        " ------Tagbar ------- {{{
+        "  this plugin displays the tags in a separate window
+        let g:tagbar_left=1            " tagbar windown locates on the left
+        let g:tagbar_autofocus=1       " cursor will move to tagbar window when it's opened
+        let g:tagbar_autoclose=1       " close tagbar automatically when selected one tag
+        nmap <F8> :TagbarToggle <cr>
+        " }}}  end of Tagbar
+    else
+        echom "Tagbar not installed!"
+    endif
+endfunction
+au VimEnter * call SetupTagbar()
 
-  " enable both ctags and gtags module
-  let g:gutentags_modules = ['ctags', 'gtags_cscope']
+function! SetupGutentags()
+    "if (exists(":GutentagsUpdate")==2)
+    if exists("g:gutentags_project_root")
+        echo "Gutentags exists!"
+        " ------Gutentags and Gutentags_plus ------- {{{
+        " enable logs
+        "let g:gutentags_trace = 1
 
-  "let g:gutentags_define_advanced_command = 1
+        " enable both ctags and gtags module
+        let g:gutentags_modules = ['ctags', 'gtags_cscope']
 
-  " config project root markers, besides VCS markers such as .git, .svn etc.
-  let g:gutentags_project_root = ['.tags']
+        "let g:gutentags_define_advanced_command = 1
 
-  " generate databases in my cache directory, prevent gtags files polluting my project
-  "let g:gutentags_cache_dir = expand('~/.tagscache')
-  let g:gutentags_cache_dir = expand(getcwd().'/.tags')
+        " config project root markers, besides VCS markers such as .git, .svn etc.
+        let g:gutentags_project_root = ['.tags']
 
-  " change focus to quickfix window after search (optional).
-  let g:gutentags_plus_switch = 1
+        " generate databases in my cache directory, prevent gtags files polluting my project
+        "let g:gutentags_cache_dir = expand('~/.tagscache')
+        let g:gutentags_cache_dir = expand(getcwd().'/.tags')
 
-  " shortkey to create a root marker for gutentags tags generating, make sure to go to the required directory before running this command
-  "nmap <leader>rtags   :!mkdir -p .tags<CR><CR>
+        " change focus to quickfix window after search (optional).
+        let g:gutentags_plus_switch = 1
 
-  " manual update tags update (Gutentags), both ctags and gtags(in a separate folder
-  " this command only available when a recognicable file is open
-  nmap <leader>tup   :GutentagsUpdate<CR>
-  " Gutentags_plus; GscopeFind {querytype} {name}
-  " disable the default keymaps by if wan:
-  " let g:gutentags_plus_nomap = 1
-  " default keymap 	                                                    desc
-  "noremap <leader>cs :GscopeFind s <C-R><C-W><cr>                       " Find symbol (reference) under cursor
-  "noremap <leader>cg :GscopeFind g <C-R><C-W><cr>                       " Find symbol definition under cursor
-  "noremap <leader>cd :GscopeFind c <C-R><C-W><cr>                       " Functions called by this function
-  "noremap <leader>cc :GscopeFind t <C-R><C-W><cr>                       " Functions calling this function
-  "noremap <leader>ct :GscopeFind e <C-R><C-W><cr>                       " Find text string under cursor
-  "noremap <leader>ce :GscopeFind f <C-R>=expand("<cfile>")<cr><cr>      " Find egrep pattern under cursor
-  "noremap <leader>cf :GscopeFind i <C-R>=expand("<cfile>")<cr><cr>      " Find file name under cursor
-  "noremap <leader>ci :GscopeFind d <C-R><C-W><cr>                       " Find files #including the file name under cursor
-  "noremap <leader>ca :GscopeFind a <C-R><C-W><cr>                       " Find places where current symbol is assigned
-  "noremap <leader>cz :GscopeFind z <C-R><C-W><cr>                       " Find current word in ctags database
+        " shortkey to create a root marker for gutentags tags generating, make sure to go to the required directory before running this command
+        "nmap <leader>rtags   :!mkdir -p .tags<CR><CR>
 
-  " define a short command to find any symbol in Command mode instead of GscopeFind to find symbol definition
-  " find any symbol by inputs
-  noremap <leader>fs :GscopeFind g
+        " manual update tags update (Gutentags), both ctags and gtags(in a separate folder
+        " this command only available when a recognicable file is open
+        nmap <leader>tup   :GutentagsUpdate<CR>
+        " Gutentags_plus; GscopeFind {querytype} {name}
+        " disable the default keymaps by if wan:
+        " let g:gutentags_plus_nomap = 1
+        " default keymap 	                                                    desc
+        "noremap <leader>cs :GscopeFind s <C-R><C-W><cr>                       " Find symbol (reference) under cursor
+        "noremap <leader>cg :GscopeFind g <C-R><C-W><cr>                       " Find symbol definition under cursor
+        "noremap <leader>cd :GscopeFind c <C-R><C-W><cr>                       " Functions called by this function
+        "noremap <leader>cc :GscopeFind t <C-R><C-W><cr>                       " Functions calling this function
+        "noremap <leader>ct :GscopeFind e <C-R><C-W><cr>                       " Find text string under cursor
+        "noremap <leader>ce :GscopeFind f <C-R>=expand("<cfile>")<cr><cr>      " Find egrep pattern under cursor
+        "noremap <leader>cf :GscopeFind i <C-R>=expand("<cfile>")<cr><cr>      " Find file name under cursor
+        "noremap <leader>ci :GscopeFind d <C-R><C-W><cr>                       " Find files #including the file name under cursor
+        "noremap <leader>ca :GscopeFind a <C-R><C-W><cr>                       " Find places where current symbol is assigned
+        "noremap <leader>cz :GscopeFind z <C-R><C-W><cr>                       " Find current word in ctags database
 
-  " find the word symbol under cursor
-  noremap <F7> :GscopeFind g <C-R><C-W><CR>
+        " define a short command to find any symbol in Command mode instead of GscopeFind to find symbol definition
+        " find any symbol by inputs
+        noremap <leader>fs :GscopeFind g
 
-  " }}}  end of Gutentags
-endif
+        " find the word symbol under cursor
+        noremap <F7> :GscopeFind g <C-R><C-W><CR>
+
+        " }}}  end of Gutentags
+    else
+        echom "Gutentags not installed!"
+    endif
+endfunction
+au VimEnter * call SetupGutentags()
 
 " F1 reserved by vim and many applications for help
 
