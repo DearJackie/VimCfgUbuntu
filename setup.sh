@@ -41,8 +41,9 @@ echo ".....installing fzf...."
 # get the latest version from github source, after installation, you must reload .bashrc as prompted, otherwise, you
 # can't find 'fzf' command
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-cd fzf
+pushd ~/.fzf
 ./install
+popd
 
 # set fzf default command as "fdfind", generate input for fzf using fd-find
 #export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*"'
@@ -66,4 +67,9 @@ mkdir -p $dest_path
 
 cp -r $script_dir/*  $dest_path
 
+# create links for neovim, which is to reuse .vim
+chmod +x  $script_dir/vim2nvim.sh
+source $script_dir/vim2nvim.sh
+
 echo ".....setting up completed!"
+
